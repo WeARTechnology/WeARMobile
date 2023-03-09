@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.example.wearmobile.mediapipe.components;
+package com.google.mediapipe.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -43,8 +43,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
 /**
- * A {@link TextureFrameProcessor} that sends video frames through a
- * MediaPipe graph and a {@link AudioDataProcessor} that sends audio
+ * A {@link com.google.mediapipe.components.TextureFrameProcessor} that sends video frames through a
+ * MediaPipe graph and a {@link com.google.mediapipe.components.AudioDataProcessor} that sends audio
  * data samples through a MediaPipe graph.
  */
 public class FrameProcessor implements TextureFrameProcessor, AudioDataProcessor {

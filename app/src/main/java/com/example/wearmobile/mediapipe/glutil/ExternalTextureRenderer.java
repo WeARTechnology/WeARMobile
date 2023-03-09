@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.example.wearmobile.mediapipe.glutil;
+package com.google.mediapipe.glutil;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;

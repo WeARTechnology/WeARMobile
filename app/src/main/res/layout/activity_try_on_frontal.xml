@@ -7,7 +7,7 @@
     tools:context=".TryOnFrontal">
 
     <FrameLayout
-        android:id="@+id/camLayout"
+        android:id="@+id/camFrameFrontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

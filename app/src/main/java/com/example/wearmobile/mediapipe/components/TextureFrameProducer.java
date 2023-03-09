@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.example.wearmobile.mediapipe.components;
+package com.google.mediapipe.components;
 
 /** Lightweight abstraction for an object that can produce video frames. */
 public interface TextureFrameProducer {

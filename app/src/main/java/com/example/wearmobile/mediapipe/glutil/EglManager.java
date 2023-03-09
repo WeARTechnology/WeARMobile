@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.example.wearmobile.mediapipe.glutil;
+package com.google.mediapipe.glutil;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import com.example.wearmobile.mediapipe.framework.Compat;
+import com.google.mediapipe.framework.Compat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;

@@ -7,7 +7,7 @@
     tools:context=".TryOnTraseiro">
 
     <FrameLayout
-        android:id="@+id/camFrame"
+        android:id="@+id/camFrameTraseiro"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
