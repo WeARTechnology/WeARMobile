@@ -1,4 +1,4 @@
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.contrib.MessageUtils;
@@ -22,6 +22,3 @@ final class TypeNameRegistryConcrete implements TypeNameRegistry {
   public <T extends MessageLite> void registerTypeName(Class<T> clazz, String typeName) {}
 }
 
-/** Satisfies Java file name convention. */
-@SuppressWarnings("TopLevel")
-final class TypeNameRegistryFull {}

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.components;
+package com.example.wearmobile.mediapipe.components;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -24,9 +24,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
-import com.google.mediapipe.framework.TextureFrame;
-import com.google.mediapipe.glutil.CommonShaders;
-import com.google.mediapipe.glutil.ShaderUtil;
+import com.example.wearmobile.mediapipe.framework.TextureFrame;
+import com.example.wearmobile.mediapipe.glutil.CommonShaders;
+import com.example.wearmobile.mediapipe.glutil.ShaderUtil;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;

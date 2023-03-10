@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.components;
+package com.example.wearmobile.mediapipe.components;
 
 import static java.lang.Math.max;
 
+import android.annotation.SuppressLint;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.AudioTimestamp;
@@ -145,6 +146,7 @@ public class MicrophoneHelper implements AudioDataProducer {
     audioRecordBufferSize = max(audioPacketBufferSize, minBufferSize) * BUFFER_SIZE_MULTIPLIER;
   }
 
+  @SuppressLint("MissingPermission")
   private void setupAudioRecord() {
 
     Log.d(TAG, "AudioRecord(" + sampleRateInHz + ", " + audioRecordBufferSize + ")");

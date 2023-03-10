@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.components;
+package com.example.wearmobile.mediapipe.components;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,10 +38,11 @@ import androidx.camera.core.ImageCapture.OnImageSavedCallback;
 import androidx.camera.core.ImageCapture.OutputFileOptions;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mediapipe.glutil.EglManager;
+import com.example.wearmobile.mediapipe.glutil.EglManager;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;

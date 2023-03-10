@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.components;
+package com.example.wearmobile.mediapipe.components;
 
-import com.google.mediapipe.framework.TextureFrame;
+import com.example.wearmobile.mediapipe.framework.TextureFrame;
 
 /** Lightweight abstraction for an object that can receive video frames. */
 public interface TextureFrameConsumer {

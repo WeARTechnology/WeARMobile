@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
 import com.google.common.base.Preconditions;
-import com.google.mediapipe.proto.CalculatorProfileProto.CalculatorProfile;
+import com.example.wearmobile.mediapipe.proto.CalculatorProfileProto.CalculatorProfile;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.List;

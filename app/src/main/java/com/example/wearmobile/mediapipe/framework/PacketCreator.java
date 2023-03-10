@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
-import com.google.mediapipe.framework.ProtoUtil.SerializedMessage;
+import com.example.wearmobile.mediapipe.framework.ProtoUtil.SerializedMessage;
 import com.google.protobuf.MessageLite;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;

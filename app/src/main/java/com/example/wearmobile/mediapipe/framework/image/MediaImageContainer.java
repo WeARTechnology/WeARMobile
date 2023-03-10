@@ -13,14 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package com.google.mediapipe.framework.image;
+package com.example.wearmobile.mediapipe.framework.image;
 
 import android.media.Image;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import androidx.annotation.RequiresApi;
-import com.google.mediapipe.framework.image.MPImage.MPImageFormat;
+import com.example.wearmobile.mediapipe.framework.image.MPImage.MPImageFormat;
 
 @RequiresApi(VERSION_CODES.KITKAT)
 class MediaImageContainer implements MPImageContainer {

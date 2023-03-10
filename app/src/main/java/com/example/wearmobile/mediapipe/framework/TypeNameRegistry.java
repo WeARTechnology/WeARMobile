@@ -1,4 +1,4 @@
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
 import com.google.protobuf.MessageLite;
 

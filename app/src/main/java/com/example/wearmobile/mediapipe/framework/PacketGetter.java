@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.FluentLogger;
-import com.google.mediapipe.framework.ProtoUtil.SerializedMessage;
+import com.example.wearmobile.mediapipe.framework.ProtoUtil.SerializedMessage;
 import com.google.protobuf.Internal;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;

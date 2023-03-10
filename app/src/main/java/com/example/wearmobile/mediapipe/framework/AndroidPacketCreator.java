@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.media.Image;
-import com.google.mediapipe.framework.image.BitmapExtractor;
-import com.google.mediapipe.framework.image.ByteBufferExtractor;
-import com.google.mediapipe.framework.image.MPImage;
-import com.google.mediapipe.framework.image.MPImageProperties;
-import com.google.mediapipe.framework.image.MediaImageExtractor;
+import com.example.wearmobile.mediapipe.framework.image.BitmapExtractor;
+import com.example.wearmobile.mediapipe.framework.image.ByteBufferExtractor;
+import com.example.wearmobile.mediapipe.framework.image.MPImage;
+import com.example.wearmobile.mediapipe.framework.image.MPImageProperties;
+import com.example.wearmobile.mediapipe.framework.image.MediaImageExtractor;
 import java.nio.ByteBuffer;
 
 // TODO: use Preconditions in this file.

@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
-package com.google.mediapipe.framework.image;
+package com.example.wearmobile.mediapipe.framework.image;
 
 /** Lightweight abstraction for an object that produce {@link MPImage} */
 public interface MPImageProducer {

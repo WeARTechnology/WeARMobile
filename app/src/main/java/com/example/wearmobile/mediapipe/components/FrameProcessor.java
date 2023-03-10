@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.components;
+package com.example.wearmobile.mediapipe.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,17 +20,17 @@ import android.media.AudioFormat;
 import android.os.Handler;
 import android.util.Log;
 import com.google.common.base.Preconditions;
-import com.google.mediapipe.proto.CalculatorProto.CalculatorGraphConfig;
-import com.google.mediapipe.framework.AndroidAssetUtil;
-import com.google.mediapipe.framework.AndroidPacketCreator;
-import com.google.mediapipe.framework.Graph;
-import com.google.mediapipe.framework.GraphService;
-import com.google.mediapipe.framework.MediaPipeException;
-import com.google.mediapipe.framework.Packet;
-import com.google.mediapipe.framework.PacketCallback;
-import com.google.mediapipe.framework.PacketGetter;
-import com.google.mediapipe.framework.SurfaceOutput;
-import com.google.mediapipe.framework.TextureFrame;
+import com.example.wearmobile.mediapipe.proto.CalculatorProto.CalculatorGraphConfig;
+import com.example.wearmobile.mediapipe.framework.AndroidAssetUtil;
+import com.example.wearmobile.mediapipe.framework.AndroidPacketCreator;
+import com.example.wearmobile.mediapipe.framework.Graph;
+import com.example.wearmobile.mediapipe.framework.GraphService;
+import com.example.wearmobile.mediapipe.framework.MediaPipeException;
+import com.example.wearmobile.mediapipe.framework.Packet;
+import com.example.wearmobile.mediapipe.framework.PacketCallback;
+import com.example.wearmobile.mediapipe.framework.PacketGetter;
+import com.example.wearmobile.mediapipe.framework.SurfaceOutput;
+import com.example.wearmobile.mediapipe.framework.TextureFrame;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
@@ -43,8 +43,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
 /**
- * A {@link com.google.mediapipe.components.TextureFrameProcessor} that sends video frames through a
- * MediaPipe graph and a {@link com.google.mediapipe.components.AudioDataProcessor} that sends audio
+ * A {@link com.example.wearmobile.mediapipe.components.TextureFrameProcessor} that sends video frames through a
+ * MediaPipe graph and a {@link com.example.wearmobile.mediapipe.components.AudioDataProcessor} that sends audio
  * data samples through a MediaPipe graph.
  */
 public class FrameProcessor implements TextureFrameProcessor, AudioDataProcessor {

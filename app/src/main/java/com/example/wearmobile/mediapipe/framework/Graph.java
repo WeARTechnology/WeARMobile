@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.framework;
+package com.example.wearmobile.mediapipe.framework;
 
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.FluentLogger;
-import com.google.mediapipe.proto.CalculatorProto.CalculatorGraphConfig;
-import com.google.mediapipe.proto.GraphTemplateProto.CalculatorGraphTemplate;
+import com.example.wearmobile.mediapipe.proto.CalculatorProto.CalculatorGraphConfig;
+import com.example.wearmobile.mediapipe.proto.GraphTemplateProto.CalculatorGraphTemplate;
 import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;

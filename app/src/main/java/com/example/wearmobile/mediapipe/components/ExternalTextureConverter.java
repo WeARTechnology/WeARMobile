@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.mediapipe.components;
+package com.example.wearmobile.mediapipe.components;
 
 import static java.lang.Math.max;
 
@@ -20,11 +20,11 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.util.Log;
-import com.google.mediapipe.framework.AppTextureFrame;
-import com.google.mediapipe.framework.GlSyncToken;
-import com.google.mediapipe.glutil.ExternalTextureRenderer;
-import com.google.mediapipe.glutil.GlThread;
-import com.google.mediapipe.glutil.ShaderUtil;
+import com.example.wearmobile.mediapipe.framework.AppTextureFrame;
+import com.example.wearmobile.mediapipe.framework.GlSyncToken;
+import com.example.wearmobile.mediapipe.glutil.ExternalTextureRenderer;
+import com.example.wearmobile.mediapipe.glutil.GlThread;
+import com.example.wearmobile.mediapipe.glutil.ShaderUtil;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
