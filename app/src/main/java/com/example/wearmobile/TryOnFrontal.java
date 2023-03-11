@@ -1,41 +1,26 @@
 package com.example.wearmobile;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.SurfaceTexture;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.Size;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.ViewGroup;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.SurfaceTexture;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
-import android.util.Size;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import com.example.wearmobile.mediapipe.components.CameraHelper;
-import com.example.wearmobile.mediapipe.components.CameraXPreviewHelper;
-import com.example.wearmobile.mediapipe.components.ExternalTextureConverter;
-import com.example.wearmobile.mediapipe.components.FrameProcessor;
-import com.example.wearmobile.mediapipe.components.PermissionHelper;
-import com.example.wearmobile.mediapipe.framework.AndroidAssetUtil;
-import com.example.wearmobile.mediapipe.glutil.EglManager;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.SurfaceTexture;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
-import android.util.Size;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
+import com.google.mediapipe.components.CameraHelper;
+import com.google.mediapipe.components.CameraXPreviewHelper;
+import com.google.mediapipe.components.ExternalTextureConverter;
+import com.google.mediapipe.components.FrameProcessor;
+import com.google.mediapipe.components.PermissionHelper;
+import com.google.mediapipe.framework.AndroidAssetUtil;
+import com.google.mediapipe.glutil.EglManager;
 
 
 public class TryOnFrontal extends AppCompatActivity {
