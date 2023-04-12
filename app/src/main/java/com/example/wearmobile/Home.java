@@ -14,15 +14,5 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Button redirecionar = findViewById(R.id.btnRedirect);
-
-
-        redirecionar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(Home.this, TryOnFrontal.class);
-                startActivity(it);
-            }
-        });
     }
 }
