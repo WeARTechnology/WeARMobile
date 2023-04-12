@@ -43,12 +43,13 @@
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
             android:layout_width="wrap_content"
-            android:layout_height="96dp"
+            android:layout_height="90dp"
             android:layout_gravity="bottom"
+            android:layout_marginTop="20dp"
             android:background="@color/white"
             app:backgroundTint="#144D83"
-            app:fabCradleMargin="20dp"
-            app:fabCradleRoundedCornerRadius="300dp"
+            app:fabCradleMargin="15dp"
+            app:fabCradleRoundedCornerRadius="250dp"
             app:layout_anchor="@+id/bottomAppBar"
             app:layout_anchorGravity="center|top">
 
