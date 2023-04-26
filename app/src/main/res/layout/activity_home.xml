@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
-    android:layout_height="match_parent"
-    tools:context=".Home"
-    android:importantForAutofill="auto">
+    android:importantForAutofill="auto"
+    android:pointerIcon="context_menu"
+    android:verticalScrollbarPosition="left"
+    tools:context=".Home">
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Home"
-        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="-78dp"
+            tools:layout_editor_absoluteY="84dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
 
 
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="212dp"
-                android:text="Button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="332dp"
+                    android:layout_height="272dp"
+                    android:layout_marginTop="16dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.493"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/moldura_da_home_carrinho" />
 
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="332dp"
+                    android:layout_height="272dp"
+                    android:layout_marginTop="288dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.493"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/moldura_da_home_carrinho" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="332dp"
+                    android:layout_height="272dp"
+                    android:layout_marginTop="692dp"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/moldura_da_home_carrinho" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
 
     <FrameLayout
@@ -45,7 +80,7 @@
         app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -90,10 +125,15 @@
                 android:background="@android:color/transparent"
                 app:elevation="0dp"
                 app:labelVisibilityMode="labeled"
-                app:menu="@menu/bottom_menu" />
+                app:menu="@menu/bottom_menu" >
+
+
+            </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
         </com.google.android.material.bottomappbar.BottomAppBar>
+
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
