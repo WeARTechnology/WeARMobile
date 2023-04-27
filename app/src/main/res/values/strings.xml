@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">WeAR</string>
+    <string name="anuncio1">Conheça Nossos produtos</string>
+    <string name="anel_no_singular">Anél</string>
+    <string name="anel_no_plural">Anéis</string>
+    <string name="oculos">Óculos</string>
+    <string name="texto_home1">Anéis para todos os gostos e de todos os tamanhos, com Try On disponivel.</string>
+    <string name="texto_home2">Diversas opções de óculos de grau e de sol com Try On diponível, tanto na web quanto no app.</string>
+    <string name="texto_home3">Mais Vendidos</string>
+
 </resources>
