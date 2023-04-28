@@ -97,6 +97,7 @@
                             handLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList());
 
                         }
+
                     }
                 }
             });
