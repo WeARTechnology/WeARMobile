@@ -11,6 +11,8 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class Home extends AppCompatActivity {
 
     @Override
@@ -19,6 +21,15 @@ public class Home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.azul)));
 
+        FloatingActionButton btn = findViewById(R.id.floatingActionButton2);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(getApplicationContext(),TryOnTraseiro.class);
+                startActivity(it);
+            }
+        });
     }
 
     @Override
