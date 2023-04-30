@@ -8,10 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class Home extends AppCompatActivity {
 
@@ -20,6 +24,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.azul)));
+
 
         FloatingActionButton btn = findViewById(R.id.floatingActionButton2);
 
@@ -30,7 +35,23 @@ public class Home extends AppCompatActivity {
                 startActivity(it);
             }
         });
+
+        BottomNavigationView bnv = findViewById(R.id.bottomNavigationView);
+        bnv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.carrinho:
+                        Intent it = new Intent(getApplicationContext(),TryOnFrontal.class);
+                        startActivity(it);
+                    case R.id.produtos:
+                        return false;
+                }
+                return false;
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

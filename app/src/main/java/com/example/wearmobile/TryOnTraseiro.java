@@ -2,7 +2,6 @@ package com.example.wearmobile;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -11,12 +10,9 @@ import android.graphics.YuvImage;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -27,13 +23,14 @@ import androidx.core.content.ContextCompat;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmarkList;
 import com.google.mediapipe.solutioncore.ResultListener;
+import com.google.mediapipe.solutions.hands.HandLandmark;
 import com.google.mediapipe.solutions.hands.HandsResult;
 import com.google.mediapipe.solutions.hands.Hands;
 import com.google.mediapipe.solutions.hands.HandsOptions;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
-import androidx.activity.result.ActivityResultLauncher;
+
 import androidx.lifecycle.LifecycleOwner;
 import android.Manifest;
 
@@ -55,11 +52,16 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
         setContentView(R.layout.activity_try_on_traseiro);
 
         //Instanciando os objetos e atribuindo eles aos itens da tela
-        previewView = findViewById(R.id.preview_view);
+        previewView = findViewById(R.id.preview_view_traseiro);
         handLandmarksOverlayView = findViewById(R.id.hand_landmarks_overlay);
 
         //Definindo a classe hands e as suas opções, por exemplo ,usar a GPU
-        HandsOptions handsOptions = HandsOptions.builder().setRunOnGpu(true).build();
+        HandsOptions handsOptions = HandsOptions.builder()
+                .setRunOnGpu(true)
+                .setMaxNumHands(1) //Número máximo de mãos que ele consegue detectar
+                .setMinDetectionConfidence(0.95F) //A confiança minima na deteção (0-1)
+                .setMinTrackingConfidence(0.95F) //A confiança minima no rastreamento (0-1)
+                .build();
         hands = new Hands(this, handsOptions);
 
         //Chamando os outros métodos da clase para rodaem
@@ -202,13 +204,19 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
     //Método que inicializa as mãos, pegando um listener do resultado do objeto de Hands, e, dentro dele, desenhando os landmarks da mão
     private void initializeHands() {
         //Instancia o objeto de hands, definindo suas opções, como, inicializar o GPU
-        HandsOptions handsOptions = HandsOptions.builder().setRunOnGpu(true).build();
+        HandsOptions handsOptions = HandsOptions.builder()
+                .setRunOnGpu(true)
+                .setMaxNumHands(1) //Número máximo de mãos que ele consegue detectar
+                .setMinDetectionConfidence(0.95F) //A confiança minima na deteção (0-1)
+                .setMinTrackingConfidence(0.95F) //A confiança minima no rastreamento (0-1)
+                .build();
         hands = new Hands(this, handsOptions);
 
         //Inicia o resultListener, ou seja, toda vez que ele enviar uma informação para a Classe, retorna um resultado, que é pego por esse Listener
         hands.setResultListener(new ResultListener<HandsResult>() {
             @Override
             public void run(HandsResult result) {
+
                 if (result.multiHandLandmarks() != null) { //Se houver a detecção de alguma mão, ou seja, for diferente de null
                     for (NormalizedLandmarkList landmarks : result.multiHandLandmarks()) { //Para cada landmark dentro do resultado
                         handLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList()); //Chama o método da classe HandLandmarksOverlayView, que desenha os landmarks na tela

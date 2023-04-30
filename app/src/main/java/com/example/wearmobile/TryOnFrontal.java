@@ -1,218 +1,199 @@
 package com.example.wearmobile;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.SurfaceTexture;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Size;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageProxy;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
 
-import com.google.mediapipe.components.CameraHelper;
-import com.google.mediapipe.components.CameraXPreviewHelper;
-import com.google.mediapipe.components.ExternalTextureConverter;
-import com.google.mediapipe.components.FrameProcessor;
-import com.google.mediapipe.components.PermissionHelper;
-import com.google.mediapipe.framework.AndroidAssetUtil;
-import com.google.mediapipe.glutil.EglManager;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mediapipe.formats.proto.LandmarkProto;
+import com.google.mediapipe.solutioncore.ResultListener;
+import com.google.mediapipe.solutions.facemesh.FaceMesh;
+import com.google.mediapipe.solutions.facemesh.FaceMeshOptions;
+import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
+
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class TryOnFrontal extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-
-    // Flips the camera-preview frames vertically by default, before sending them into FrameProcessor
-    // to be processed in a MediaPipe graph, and flips the processed frames back when they are
-    // displayed. This maybe needed because OpenGL represents images assuming the image origin is at
-    // the bottom-left corner, whereas MediaPipe in general assumes the image origin is at the
-    // top-left corner.
-    // NOTE: use "flipFramesVertically" in manifest metadata to override this behavior.
-    private static final boolean FLIP_FRAMES_VERTICALLY = true;
-
-    // Number of output frames allocated in ExternalTextureConverter.
-    // NOTE: use "converterNumBuffers" in manifest metadata to override number of buffers. For
-    // example, when there is a FlowLimiterCalculator in the graph, number of buffers should be at
-    // least `max_in_flight + max_in_queue + 1` (where max_in_flight and max_in_queue are used in
-    // FlowLimiterCalculator options). That's because we need buffers for all the frames that are in
-    // flight/queue plus one for the next frame from the camera.
-    private static final int NUM_BUFFERS = 2;
-
-    static {
-        // Load all native libraries needed by the app.
-        System.loadLibrary("mediapipe_jni");
-        try {
-            System.loadLibrary("opencv_java3");
-        } catch (java.lang.UnsatisfiedLinkError e) {
-            // Some example apps (e.g. template matching) require OpenCV 4.
-            System.loadLibrary("opencv_java4");
-        }
-    }
-
-    // Sends camera-preview frames into a MediaPipe graph for processing, and displays the processed
-    // frames onto a {@link Surface}.
-    protected FrameProcessor processor;
-    // Handles camera access via the {@link CameraX} Jetpack support library.
-    protected CameraXPreviewHelper cameraHelper;
-
-    // {@link SurfaceTexture} where the camera-preview frames can be accessed.
-    private SurfaceTexture previewFrameTexture;
-    // {@link SurfaceView} that displays the camera-preview frames processed by a MediaPipe graph.
-    private SurfaceView previewDisplayView;
-
-    // Creates and manages an {@link EGLContext}.
-    private EglManager eglManager;
-    // Converts the GL_TEXTURE_EXTERNAL_OES texture from Android camera into a regular texture to be
-    // consumed by {@link FrameProcessor} and the underlying MediaPipe graph.
-    private ExternalTextureConverter converter;
-
-    // ApplicationInfo for retrieving metadata defined in the manifest.
-    private ApplicationInfo applicationInfo;
+    //Inicialização de variáveis globais
+    private PreviewView previewView; //Objeto do preview da camera na tela
+    private ProcessCameraProvider cameraProvider; //Objeto que cuida do lifecycle da camera
+    private CameraSelector cameraSelector; // Objeto que seleciona qual camera será usada (frontal, traseira, etc..)
+    private Preview preview; //Objeto que permite que o preview de o que a camera está capturando seja usado
+    private FaceMesh facemesh; //Objeto de facemesh do Mediapipe, que acha os pontos em um rosto quando detectado na camera
+    private GlassesLandmarksOverlayView glassesLandmarksOverlayView;/*Objeto da classe interna HandLandmarksOverlayView, que produz um View na activity,
+                                                                que possui os pontos recebidos através dos dados da classe facemesh*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getContentViewLayoutResId());
+        setContentView(R.layout.activity_try_on_frontal);
 
-        try {
-            applicationInfo =
-                    getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-        } catch (NameNotFoundException e) {
-            Log.e(TAG, "Cannot find application info: " + e);
-        }
+        //Atribuindo objetos aos views da activity
+        previewView = findViewById(R.id.preview_view_frontal);
+        glassesLandmarksOverlayView = findViewById(R.id.face_landmarks_overlay);
 
-        previewDisplayView = new SurfaceView(this);
-        setupPreviewDisplayView();
+        //Cria as opções do facemesh, por exemplo, a confiança minima, e assim por diante
+        FaceMeshOptions faceMeshOptions = FaceMeshOptions.builder()
+                .setRunOnGpu(true)
+                .setMinDetectionConfidence(0.95F) //Confinça minima de detecção
+                .setMinTrackingConfidence(0.95F) //Confiança minima de rastreamento
+                .setRefineLandmarks(true)
+                .build();
 
-        // Initialize asset manager so that MediaPipe native libraries can access the app assets, e.g.,
-        // binary graphs.
-        AndroidAssetUtil.initializeNativeAssetManager(this);
-        eglManager = new EglManager(null);
-        processor =
-                new FrameProcessor(
-                        this,
-                        eglManager.getNativeContext(),
-                        applicationInfo.metaData.getString("binaryGraphName"),
-                        applicationInfo.metaData.getString("inputVideoStreamName"),
-                        applicationInfo.metaData.getString("outputVideoStreamName"));
-        processor
-                .getVideoSurfaceOutput()
-                .setFlipY(
-                        applicationInfo.metaData.getBoolean("flipFramesVertically", FLIP_FRAMES_VERTICALLY));
+        //Cria o objeto de facemesh com as opções criadas acima
+        facemesh = new FaceMesh(this, faceMeshOptions);
 
-        PermissionHelper.checkAndRequestCameraPermissions(this);
+        startCamera();
+        initializateFace();
+
+
     }
 
-    // Used to obtain the content view for this application. If you are extending this class, and
-    // have a custom layout, override this method and return the custom layout.
-    protected int getContentViewLayoutResId() {
-        return R.layout.activity_try_on_frontal;
+
+    //Método que converte ImageProxy(Objeto que vem da classe ImageAnalysis) em Bitmap para enviar ao Mediapipe
+    private Bitmap imageProxyToBitmap(ImageProxy image) {
+        //Pega os valores de YUV do ImageProxy (YUV é um formato de imagem, que não é compatível com Mediapipe)
+        ImageProxy.PlaneProxy yPlane = image.getPlanes()[0];
+        ImageProxy.PlaneProxy uPlane = image.getPlanes()[1];
+        ImageProxy.PlaneProxy vPlane = image.getPlanes()[2];
+
+        //Salva os valores obtidos em buffers para transferir a informação
+        ByteBuffer yBuffer = yPlane.getBuffer();
+        ByteBuffer uBuffer = uPlane.getBuffer();
+        ByteBuffer vBuffer = vPlane.getBuffer();
+
+        //Pega o tamanho de cada buffer, ou seja, cada valor da imagem original
+        int ySize = yBuffer.remaining();
+        int uSize = uBuffer.remaining();
+        int vSize = vBuffer.remaining();
+
+        //"Método" que cria um array de bytes no formato NV21 que é uma variação de YUV, e, dentro dele, armazena os valores de YUV
+        byte[] nv21 = new byte[ySize + uSize + vSize];
+        yBuffer.get(nv21, 0, ySize);
+        vBuffer.get(nv21, ySize, vSize);
+        uBuffer.get(nv21, ySize + vSize, uSize);
+
+        //Cria efetivamente uma imagem YUV com os dados obtidos
+        YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
+
+        //"Metodo" para transformar esse YUV em jpeg, mantendo a qualidade da imagem em 100
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), 100, out);
+
+        //Pega os bytes da imagem, e decodifica eles em bitmap, para fazer o retorno do método
+        byte[] imageBytes = out.toByteArray();
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        converter =
-                new ExternalTextureConverter(
-                        eglManager.getContext(),
-                        applicationInfo.metaData.getInt("converterNumBuffers", NUM_BUFFERS));
-        converter.setFlipY(
-                applicationInfo.metaData.getBoolean("flipFramesVertically", FLIP_FRAMES_VERTICALLY));
-        converter.setConsumer(processor);
-        if (PermissionHelper.cameraPermissionsGranted(this)) {
-            startCamera();
-        }
-    }
+    private void startCamera() {
+        /*Leitor assincrono(Executa no futuro, no momento em que a computação está completa) da classe ProcessCameraProvider, que é a classe que
+         * cuida dos recursos da camera e do ciclo de vida, ao chamar ProcessCameraProvider.getInstance ele retonra uma instancia da imagem da
+         * camera, mas é assincrono pois esse retorno pode demorar*/
+        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+        cameraProviderFuture.addListener(() -> { //Adiciona um listener, para, quando houver o retorno assincrono, rodar uma função
+            try { //Utiliza-se try, pois, por ser assincrono, podem haver erros se rodar direto
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        converter.close();
+                cameraProvider = cameraProviderFuture.get(); //Pega os dados da câmera "do futuro"
 
-        // Hide preview display until we re-open the camera again.
-        previewDisplayView.setVisibility(View.GONE);
-    }
+                //Cria a instancia do Preview, e, define as configurações dela, no caso, usar a câmera frontal
+                preview = new Preview.Builder().build();
+                cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
+                        .build();
 
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
+                //Define para qual superficie a preview vai, que no caso, é para o previewView
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-    protected void onCameraStarted(SurfaceTexture surfaceTexture) {
-        previewFrameTexture = surfaceTexture;
-        // Make the display view visible to start showing the preview. This triggers the
-        // SurfaceHolder.Callback added to (the holder of) previewDisplayView.
-        previewDisplayView.setVisibility(View.VISIBLE);
-    }
+                //Instancia ImageAnalysis, classe que mantem o ultimo quadro do vídeo em buffer, e analisa ele, podendo realizar funções
+                ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build();
 
-    protected Size cameraTargetResolution() {
-        return null; // No preference and let the camera (helper) decide.
-    }
+                //Define o analizador, ou seja, quando houver um quadro, o que será feito com ele
+                imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(this), new ImageAnalysis.Analyzer() {
+                    @Override
+                    public void analyze(@NonNull ImageProxy imageProxy) {
+                        //Se as dimensões da imagem forem <= a 0, significa que a imagem não existe, pois suas dimensões são invalidas
+                        if (imageProxy.getWidth() <= 0 || imageProxy.getHeight() <= 0) {
+                            Log.e("TryOnTraseiro", "Dimensões da imagem inválidas, Largura=" + imageProxy.getWidth() + ", Altura=" + imageProxy.getHeight());
+                            imageProxy.close(); //Fecha o analyzer
+                            return;
+                        } else { //Caso as dimensões estejam certas
 
-    public void startCamera() {
-        cameraHelper = new CameraXPreviewHelper();
-        previewFrameTexture = converter.getSurfaceTexture();
-        cameraHelper.setOnCameraStartedListener(
-                surfaceTexture -> {
-                    onCameraStarted(surfaceTexture);
+                            //Cria um bitmap da imagem fornecida, utilizando o método interno da classe, e passando o imageProxy
+                            Bitmap bitmap = TryOnFrontal.this.imageProxyToBitmap(imageProxy);
+
+                            //Muda a escala desse bitmap, para um tamanho que o Mediapipe reconheça, que é 256x256px
+                            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
+
+                            //Caso o tamanho do bitmap for invalido, <= 0, ele fecha o método
+                            if (bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0 || scaledBitmap.getWidth() <= 0 || scaledBitmap.getHeight() <= 0) {
+                                Log.e("TryOnTraseiro", "Dimensões da imagem inválidas, Largura=" + bitmap.getWidth() + ", Altura=" + bitmap.getHeight());
+                                imageProxy.close(); //Fecha o método
+                                return;
+                            } else { //Caso tudo esteja certo, envia a imagem ao mediapipe
+                                facemesh.send(scaledBitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
+                            }
+                            imageProxy.close(); //Ao fim da função, fecha o ImageProxy que é dado pelo Analyze
+                        }
+                    }
                 });
-        CameraHelper.CameraFacing cameraFacing =
-                applicationInfo.metaData.getBoolean("cameraFacingFront", false)
-                        ? CameraHelper.CameraFacing.FRONT
-                        : CameraHelper.CameraFacing.BACK;
-        cameraHelper.startCamera(
-                this, cameraFacing, previewFrameTexture, cameraTargetResolution());
+                cameraProvider.unbindAll(); //Solta tudo do cameraProvider, para "limpa-lo"
+                //Prende ao lifecycle do CameraProvider, os valores da camera, do preview, e da imagem analisada
+                cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
+            } catch (ExecutionException | InterruptedException e) { //Caso der erro, dá um catch e retorna a home
+                e.printStackTrace();
+                Intent it = new Intent(getApplicationContext(), Home.class);
+                startActivity(it);
+            }
+        }, ContextCompat.getMainExecutor(this)); //Define que, quem faz essa ação é a Activity atual
     }
 
-    protected Size computeViewSize(int width, int height) {
-        return new Size(width, height);
-    }
+    private void initializateFace() {
+        //Cria as opções do facemesh, por exemplo, a confiança minima, e assim por diante
+        FaceMeshOptions faceMeshOptions = FaceMeshOptions.builder()
+                .setRunOnGpu(true)
+                .setMinDetectionConfidence(0.95F) //Confinça minima de detecção
+                .setMinTrackingConfidence(0.95F) //Confiança minima de rastreamento
+                .setRefineLandmarks(true)
+                .build();
 
-    protected void onPreviewDisplaySurfaceChanged(
-            SurfaceHolder holder, int format, int width, int height) {
-        // (Re-)Compute the ideal size of the camera-preview display (the area that the
-        // camera-preview frames get rendered onto, potentially with scaling and rotation)
-        // based on the size of the SurfaceView that contains the display.
-        Size viewSize = computeViewSize(width, height);
-        Size displaySize = cameraHelper.computeDisplaySizeFromViewSize(viewSize);
-        boolean isCameraRotated = cameraHelper.isCameraRotated();
+        //Cria o objeto de facemesh com as opções criadas acima
+        facemesh = new FaceMesh(this, faceMeshOptions);
 
-        // Configure the output width and height as the computed display size.
-        converter.setDestinationSize(
-                isCameraRotated ? displaySize.getHeight() : displaySize.getWidth(),
-                isCameraRotated ? displaySize.getWidth() : displaySize.getHeight());
-    }
+        facemesh.setResultListener(new ResultListener<FaceMeshResult>() {
+            @Override
+            public void run(FaceMeshResult result) {
 
-    private void setupPreviewDisplayView() {
-        previewDisplayView.setVisibility(View.GONE);
-        ViewGroup viewGroup = findViewById(R.id.camFrameFrontal);
-        viewGroup.addView(previewDisplayView);
+                if(result.multiFaceLandmarks() != null){ //Se houver algum landmark de rosto
+                    for(LandmarkProto.NormalizedLandmarkList landmarks : result.multiFaceLandmarks()){
+                        Log.i("Resultados", "Landmarks: " +  landmarks.getLandmarkList());
+                        glassesLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList());
+                        //todo MUDAR PARA 3D
+                    }
+                }
+            }
+        });
 
-        previewDisplayView
-                .getHolder()
-                .addCallback(
-                        new SurfaceHolder.Callback() {
-                            @Override
-                            public void surfaceCreated(SurfaceHolder holder) {
-                                processor.getVideoSurfaceOutput().setSurface(holder.getSurface());
-                            }
-
-                            @Override
-                            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                                onPreviewDisplaySurfaceChanged(holder, format, width, height);
-                            }
-
-                            @Override
-                            public void surfaceDestroyed(SurfaceHolder holder) {
-                                processor.getVideoSurfaceOutput().setSurface(null);
-                            }
-                        });
     }
 }

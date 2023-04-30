@@ -10,6 +10,8 @@
 
 
     import com.google.mediapipe.formats.proto.LandmarkProto;
+    import com.google.mediapipe.solutions.hands.HandLandmark;
+    import com.google.mediapipe.solutions.hands.HandsOptions;
 
     import java.util.List;
 
@@ -44,8 +46,16 @@
                 invalidate(); //Chama o draw dessa View
             }
 
+        private Paint paint;
 
-            //Método onDraw, que vai desenhar os landarmarks todo mudar para 3D
+        private void init() {
+            paint = new Paint();
+            paint.setColor(Color.GREEN);
+            paint.setStrokeWidth(2);
+        }
+
+
+        //Método onDraw, que vai desenhar os landarmarks todo mudar para 3D
             @Override
             protected void onDraw(Canvas canvas) {
                 super.onDraw(canvas);
@@ -56,15 +66,12 @@
 
                 if (landmarks != null) { //Se não forem nulos os landmarks
                     //Cria um objeto de Paint, definindo a cor como vermelho, e como cheios
-                    Paint paint = new Paint();
-                    paint.setColor(Color.RED);
-                    paint.setStyle(Paint.Style.FILL);
+
 
                     // Para cada valor de landmark na lista recebida
                     for (LandmarkProto.NormalizedLandmark landmark : landmarks) {
                         float x =  imageWidth * landmark.getX(); //Define a cordenada X, como a multiplicação do valor recebido pela largura da tela
                         float y =  imageHeight * landmark.getY();//Define a cordenada Y, como a multiplicação do valor recebido pela altura da tela
-
                         canvas.drawCircle(x, y, 15, paint); //Desenha circulos de raio 15, usando as configurações acima
                     }
 
