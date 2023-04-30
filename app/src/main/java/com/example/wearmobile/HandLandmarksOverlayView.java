@@ -46,16 +46,8 @@
                 invalidate(); //Chama o draw dessa View
             }
 
-        private Paint paint;
 
-        private void init() {
-            paint = new Paint();
-            paint.setColor(Color.GREEN);
-            paint.setStrokeWidth(2);
-        }
-
-
-        //Método onDraw, que vai desenhar os landarmarks todo mudar para 3D
+            //Método onDraw, que vai desenhar os landarmarks todo mudar para 3D
             @Override
             protected void onDraw(Canvas canvas) {
                 super.onDraw(canvas);
@@ -66,6 +58,9 @@
 
                 if (landmarks != null) { //Se não forem nulos os landmarks
                     //Cria um objeto de Paint, definindo a cor como vermelho, e como cheios
+                    Paint paint = new Paint();
+                    paint.setColor(Color.RED);
+                    paint.setStyle(Paint.Style.FILL);
 
 
                     // Para cada valor de landmark na lista recebida
@@ -73,6 +68,7 @@
                         float x =  imageWidth * landmark.getX(); //Define a cordenada X, como a multiplicação do valor recebido pela largura da tela
                         float y =  imageHeight * landmark.getY();//Define a cordenada Y, como a multiplicação do valor recebido pela altura da tela
                         canvas.drawCircle(x, y, 15, paint); //Desenha circulos de raio 15, usando as configurações acima
+
                     }
 
                     // Define o paint agora como azul, e como uma linha de grossura 8
@@ -81,20 +77,38 @@
 
                     // Defina as conexões entre pontos de referência (por exemplo, ponta do polegar para polegar)
                     int[][] connections = {
-                            {0, 1}, {1, 2}, {2, 3}, {3, 4},
-                            {0, 5}, {5, 6}, {6, 7}, {7, 8},
-                            {0, 9}, {9, 10}, {10, 11}, {11, 12},
-                            {0, 13}, {13, 14}, {14, 15}, {15, 16},
-                            {0, 17}, {17, 18}, {18, 19}, {19, 20}
+                            {HandLandmark.WRIST, HandLandmark.THUMB_CMC},
+                            {HandLandmark.THUMB_CMC, HandLandmark.THUMB_MCP},
+                            {HandLandmark.THUMB_MCP, HandLandmark.THUMB_IP},
+                            {HandLandmark.THUMB_IP, HandLandmark.THUMB_TIP},
+                            {HandLandmark.WRIST, HandLandmark.INDEX_FINGER_MCP},
+                            {HandLandmark.INDEX_FINGER_MCP, HandLandmark.INDEX_FINGER_PIP},
+                            {HandLandmark.INDEX_FINGER_PIP, HandLandmark.INDEX_FINGER_DIP},
+                            {HandLandmark.INDEX_FINGER_DIP, HandLandmark.INDEX_FINGER_TIP},
+                            {HandLandmark.WRIST, HandLandmark.MIDDLE_FINGER_MCP},
+                            {HandLandmark.MIDDLE_FINGER_MCP, HandLandmark.MIDDLE_FINGER_PIP},
+                            {HandLandmark.MIDDLE_FINGER_PIP, HandLandmark.MIDDLE_FINGER_DIP},
+                            {HandLandmark.MIDDLE_FINGER_DIP, HandLandmark.MIDDLE_FINGER_TIP},
+                            {HandLandmark.WRIST, HandLandmark.RING_FINGER_MCP},
+                            {HandLandmark.RING_FINGER_MCP, HandLandmark.RING_FINGER_PIP},
+                            {HandLandmark.RING_FINGER_PIP, HandLandmark.RING_FINGER_DIP},
+                            {HandLandmark.RING_FINGER_DIP, HandLandmark.RING_FINGER_TIP},
+                            {HandLandmark.WRIST, HandLandmark.PINKY_MCP},
+                            {HandLandmark.PINKY_MCP, HandLandmark.PINKY_PIP},
+                            {HandLandmark.PINKY_PIP, HandLandmark.PINKY_DIP},
+                            {HandLandmark.PINKY_DIP, HandLandmark.PINKY_TIP}
                     };
+
 
                     //Para cada valor de conexão dentro da matriz
                     for (int[] connection : connections) {
-                        float x1 = landmarks.get(connection[0]).getX() * imageWidth ; //Define a linha como a multiplicação entre o ponto da conexão e a largura
-                        float y1 = landmarks.get(connection[0]).getY() * imageHeight ;//Define a linha como a multiplicação entre o ponto da conexão e a altura
-                        float x2 = landmarks.get(connection[1]).getX() * imageWidth;//Define a linha como a multiplicação entre o ponto da conexão e a largura
-                        float y2 = landmarks.get(connection[1]).getY() * imageHeight;//Define a linha como a multiplicação entre o ponto da conexão e a altura
-                        canvas.drawLine(x1, y1, x2, y2, paint); //Desenha a linha
+                        LandmarkProto.NormalizedLandmark startLandmark = landmarks.get(connection[0]);
+                        LandmarkProto.NormalizedLandmark endLandmark = landmarks.get(connection[1]);
+                        float startX = imageWidth * startLandmark.getX();
+                        float startY = imageHeight * startLandmark.getY();
+                        float endX = imageWidth * endLandmark.getX();
+                        float endY = imageHeight * endLandmark.getY();
+                        canvas.drawLine(startX, startY, endX, endY, paint);
                     }
                 }
             }

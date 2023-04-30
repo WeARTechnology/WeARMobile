@@ -57,7 +57,7 @@ public class GlassesLandmarksOverlayView extends View {
 
     private PointF landmarkToScreenCoordinate(LandmarkProto.NormalizedLandmark landmark) {
         imageWidth = 1080;
-        imageHeight = 2110;
+        imageHeight = 2118;
         float x = landmark.getX() * imageWidth;
         float y = landmark.getY() * imageHeight;
         return new PointF(x, y);
@@ -75,10 +75,12 @@ public class GlassesLandmarksOverlayView extends View {
         linePaint = new Paint();
         linePaint.setColor(Color.GREEN);
         linePaint.setStrokeWidth(2);
+
+
         if (landmarks == null) {
             return;
         }
-// Assuming you have the landmarks as a List of PointF objects (e.g., List<PointF> landmarks)
+
         for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_CONTOURS) {
             PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
             PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
