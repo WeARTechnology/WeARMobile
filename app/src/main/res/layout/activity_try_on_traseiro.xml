@@ -12,21 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true" >
 
+    </androidx.camera.view.PreviewView>
 
-    <com.example.wearmobile.handLandmarksOverlayView
+    <com.example.wearmobile.HandLandmarksOverlayView
         android:id="@+id/hand_landmarks_overlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:rotation="90"
+        android:rotationY="0" />
 
-    <Button
-        android:id="@+id/try_ring_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:text="Try Ring" />
 
 </RelativeLayout>

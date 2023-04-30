@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
     <!-- Para permitir o uso da camera -->
-    <permission android:name="android.permission.CAMERA" />
-
-    <uses-feature android:name="android.hardware.camera" />
-
+    <uses-permission android:name="android.permission.CAMERA" android:required="true"/>
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -19,7 +17,7 @@
         android:theme="@style/Theme.WeARMobile"
         tools:targetApi="31" >
         <activity
-            android:name=".handLandmarksOverlayView"
+            android:name=".HandLandmarksOverlayView"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
