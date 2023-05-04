@@ -61,6 +61,7 @@ public class TryOn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_try_on);
 
+
         //Atribuindo objetos aos views da activity
         previewView = findViewById(R.id.preview_view_frontal);
         handLandmarksOverlayView = new HandLandmarksOverlayView(getApplicationContext(),null);
