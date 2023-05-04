@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
+
     <!-- Para permitir o uso da camera -->
     <uses-permission android:name="android.permission.CAMERA" android:required="true"/>
     <uses-feature android:name="android.hardware.camera" android:required="true"/>
@@ -24,10 +25,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".TryOnTraseiro"
-            android:exported="false" />
-        <activity
-            android:name=".TryOnFrontal"
+            android:name=".TryOn"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"

@@ -40,6 +40,7 @@
                 super(context,attrs);
             }
 
+
             //Método que define os landmarks recebidos, como os landmarks da classe
             public void setLandmarks(List<LandmarkProto.NormalizedLandmark> landmarks) {
                 this.landmarks = landmarks;

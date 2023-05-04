@@ -1,5 +1,6 @@
 package com.example.wearmobile;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,7 +11,11 @@ import android.graphics.YuvImage;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -20,40 +25,57 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
+
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.mediapipe.formats.proto.LandmarkProto.NormalizedLandmarkList;
+import com.google.mediapipe.formats.proto.LandmarkProto;
 import com.google.mediapipe.solutioncore.ResultListener;
-import com.google.mediapipe.solutions.hands.HandLandmark;
-import com.google.mediapipe.solutions.hands.HandsResult;
+import com.google.mediapipe.solutions.facemesh.FaceMesh;
+import com.google.mediapipe.solutions.facemesh.FaceMeshOptions;
+import com.google.mediapipe.solutions.facemesh.FaceMeshResult;
 import com.google.mediapipe.solutions.hands.Hands;
 import com.google.mediapipe.solutions.hands.HandsOptions;
+import com.google.mediapipe.solutions.hands.HandsResult;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 
-import androidx.lifecycle.LifecycleOwner;
-import android.Manifest;
 
-
-public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
-
+public class TryOn extends AppCompatActivity {
     //Inicialização de variáveis globais
     private PreviewView previewView; //Objeto do preview da camera na tela
     private ProcessCameraProvider cameraProvider; //Objeto que cuida do lifecycle da camera
     private CameraSelector cameraSelector; // Objeto que seleciona qual camera será usada (frontal, traseira, etc..)
     private Preview preview; //Objeto que permite que o preview de o que a camera está capturando seja usado
+    private FaceMesh facemesh; //Objeto de facemesh do Mediapipe, que acha os pontos em um rosto quando detectado na camera
+    private GlassesLandmarksOverlayView glassesLandmarksOverlayView;/*Objeto da classe interna HandLandmarksOverlayView, que produz um View na activity,
+                                                                que possui os pontos recebidos através dos dados da classe facemesh*/
     private Hands hands; // Objeto da classe hands do mediapipe que recebe a imagem e acha a mão
     private HandLandmarksOverlayView handLandmarksOverlayView; /*Objeto da classe interna HandLandmarksOverlayView, que produz um View na activity,
                                                                 que possui os pontos recebidos através dos dados da classe hands e desenha o esqueleto da mão*/
-
+    private boolean frontal = true;
+    private Button switchCamera;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_try_on_traseiro);
+        setContentView(R.layout.activity_try_on);
 
-        //Instanciando os objetos e atribuindo eles aos itens da tela
-        previewView = findViewById(R.id.preview_view_traseiro);
-        handLandmarksOverlayView = findViewById(R.id.hand_landmarks_overlay);
+        //Atribuindo objetos aos views da activity
+        previewView = findViewById(R.id.preview_view_frontal);
+        handLandmarksOverlayView = new HandLandmarksOverlayView(getApplicationContext(),null);
+        handLandmarksOverlayView.setRotation(90);
+
+        glassesLandmarksOverlayView = new GlassesLandmarksOverlayView(getApplicationContext(),null);
+        glassesLandmarksOverlayView.setRotation(-90);
+        switchCamera = findViewById(R.id.btnVirar);
+
+        //Adicionando o XML da câmera frontal na tela de padrão
+        final ViewGroup mainLayout = findViewById(R.id.preview_view_frontal);
+        handLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
+        glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
+        mainLayout.addView(glassesLandmarksOverlayView);
+
 
         //Definindo a classe hands e as suas opções, por exemplo ,usar a GPU
         HandsOptions handsOptions = HandsOptions.builder()
@@ -62,19 +84,66 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
                 .setMinDetectionConfidence(0.95F) //A confiança minima na deteção (0-1)
                 .setMinTrackingConfidence(0.95F) //A confiança minima no rastreamento (0-1)
                 .build();
-        hands = new Hands(this, handsOptions);
+        hands = new Hands(getApplicationContext(), handsOptions);
 
-        //Chamando os outros métodos da clase para rodaem
+        //Cria as opções do facemesh, por exemplo, a confiança minima, e assim por diante
+        FaceMeshOptions faceMeshOptions = FaceMeshOptions.builder()
+                .setRunOnGpu(true)
+                .setMinDetectionConfidence(0.95F) //Confinça minima de detecção
+                .setMinTrackingConfidence(0.95F) //Confiança minima de rastreamento
+                .setRefineLandmarks(true)
+                .build();
+
+        //Cria o objeto de facemesh com as opções criadas acima
+        facemesh = new FaceMesh(getApplicationContext(), faceMeshOptions);
+
+
+        //Chamando os outros métodos da clase para rodarem
         requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
-        initializeHands(); //Método que inicializa o desenho das mãos
+        initializateFace(); //Método que inicializa o desenho do rosto
+
+
+        //Listener do clique do botão que troca de câmera
+        switchCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(frontal != true){ //Quando o botão for clicado, inverte do frontal para o traseiro, definindo o frontal como true, o que fará que na proxima vez ele vá para o traseiro
+                    if(handLandmarksOverlayView.getParent() != null){
+                        mainLayout.removeView(handLandmarksOverlayView);
+                    }
+
+                    if(glassesLandmarksOverlayView.getParent() == null){
+                        mainLayout.addView(glassesLandmarksOverlayView);
+                    }
+
+                    //Chamando os outros métodos da clase para rodarem
+                    requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
+                    initializateFace(); //Método que inicializa o desenho do rosto
+                    frontal = true;
+
+                }else{
+                    if(glassesLandmarksOverlayView.getParent() != null){
+                        mainLayout.removeView(glassesLandmarksOverlayView);
+                    }
+                    if(handLandmarksOverlayView.getParent() == null){
+                        mainLayout.addView(handLandmarksOverlayView);
+
+                    }
+
+                    //Chamando os outros métodos da clase para rodarem
+                    requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
+                    initializeHands(); //Método que inicializa o desenho das mãos
+                    frontal = false;
+                }
+            }
+        });
 
     }
 
 
-
     private void requestCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) { //Checka se a permissão foi dada
+            if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) { //Checka se a permissão foi dada
                 startCamera(); //Caso sim, inicializa a camera
             } else {
                 // Caso não, pede a permissão da câmera
@@ -86,7 +155,7 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
     }
 
 
-    //Sobreescrevendo o métodoo onRequestPermission result, para que, caso a permissão seja dada, inicalize a câmera, senão, avisa que é necessário faze-lo
+    //Sobreescrevendo o método onRequestPermission result, para que, caso a permissão seja dada, inicalize a câmera, senão, avisa que é necessário faze-lo
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -98,6 +167,7 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
             startActivity(it);
         }
     }
+
 
     //Método que converte ImageProxy(Objeto que vem da classe ImageAnalysis) em Bitmap para enviar ao Mediapipe
     private Bitmap imageProxyToBitmap(ImageProxy image) {
@@ -134,22 +204,21 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
         return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
-
-    //Método que inicializa a câmera
     private void startCamera() {
         /*Leitor assincrono(Executa no futuro, no momento em que a computação está completa) da classe ProcessCameraProvider, que é a classe que
-        * cuida dos recursos da camera e do ciclo de vida, ao chamar ProcessCameraProvider.getInstance ele retonra uma instancia da imagem da
-        * camera, mas é assincrono pois esse retorno pode demorar*/
+         * cuida dos recursos da camera e do ciclo de vida, ao chamar ProcessCameraProvider.getInstance ele retonra uma instancia da imagem da
+         * camera, mas é assincrono pois esse retorno pode demorar*/
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> { //Adiciona um listener, para, quando houver o retorno assincrono, rodar uma função
             try { //Utiliza-se try, pois, por ser assincrono, podem haver erros se rodar direto
 
                 cameraProvider = cameraProviderFuture.get(); //Pega os dados da câmera "do futuro"
 
-                //Cria a instancia do Preview, e, define as configurações dela, no caso, usar a câmera traseira
+                //Cria a instancia do Preview, e, define as configurações dela
                 preview = new Preview.Builder().build();
                 cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        //Utilização de operador ternário para, se a frontal for true definir a camêra frontal, senão a traseira
+                        .requireLensFacing(frontal == true ? CameraSelector.LENS_FACING_FRONT : CameraSelector.LENS_FACING_BACK)
                         .build();
 
                 //Define para qual superficie a preview vai, que no caso, é para o previewView
@@ -172,18 +241,24 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
                         } else { //Caso as dimensões estejam certas
 
                             //Cria um bitmap da imagem fornecida, utilizando o método interno da classe, e passando o imageProxy
-                            Bitmap bitmap = TryOnTraseiro.this.imageProxyToBitmap(imageProxy);
+                            Bitmap bitmap = TryOn.this.imageProxyToBitmap(imageProxy);
 
                             //Muda a escala desse bitmap, para um tamanho que o Mediapipe reconheça, que é 256x256px
                             Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
 
                             //Caso o tamanho do bitmap for invalido, <= 0, ele fecha o método
-                            if (bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0 || scaledBitmap.getWidth() <= 0 || scaledBitmap.getHeight() <= 0 ) {
+                            if (bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0 || scaledBitmap.getWidth() <= 0 || scaledBitmap.getHeight() <= 0) {
                                 Log.e("TryOnTraseiro", "Dimensões da imagem inválidas, Largura=" + bitmap.getWidth() + ", Altura=" + bitmap.getHeight());
                                 imageProxy.close(); //Fecha o método
                                 return;
                             } else { //Caso tudo esteja certo, envia a imagem ao mediapipe
-                                hands.send(scaledBitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
+                                if(frontal == true) {
+                                    facemesh.send(scaledBitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
+                                }
+                                else
+                                {
+                                    hands.send(scaledBitmap,imageProxy.getImageInfo().getTimestamp());
+                                }
                             }
                             imageProxy.close(); //Ao fim da função, fecha o ImageProxy que é dado pelo Analyze
                         }
@@ -194,12 +269,38 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
                 cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
             } catch (ExecutionException | InterruptedException e) { //Caso der erro, dá um catch e retorna a home
                 e.printStackTrace();
-                Intent it = new Intent(getApplicationContext(),Home.class);
+                Intent it = new Intent(getApplicationContext(), Home.class);
                 startActivity(it);
             }
         }, ContextCompat.getMainExecutor(this)); //Define que, quem faz essa ação é a Activity atual
     }
 
+    private void initializateFace() {
+        //Cria as opções do facemesh, por exemplo, a confiança minima, e assim por diante
+        FaceMeshOptions faceMeshOptions = FaceMeshOptions.builder()
+                .setRunOnGpu(true)
+                .setMinDetectionConfidence(0.95F) //Confinça minima de detecção
+                .setMinTrackingConfidence(0.95F) //Confiança minima de rastreamento
+                .setRefineLandmarks(true)
+                .build();
+
+        //Cria o objeto de facemesh com as opções criadas acima
+        facemesh = new FaceMesh(this, faceMeshOptions);
+
+        facemesh.setResultListener(new ResultListener<FaceMeshResult>() {
+            @Override
+            public void run(FaceMeshResult result) {
+
+                if(result.multiFaceLandmarks() != null){ //Se houver algum landmark de rosto
+                    for(LandmarkProto.NormalizedLandmarkList landmarks : result.multiFaceLandmarks()){
+                        glassesLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList());
+                        //todo MUDAR PARA 3D
+                    }
+                }
+            }
+        });
+
+    }
 
     //Método que inicializa as mãos, pegando um listener do resultado do objeto de Hands, e, dentro dele, desenhando os landmarks da mão
     private void initializeHands() {
@@ -218,7 +319,7 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
             public void run(HandsResult result) {
 
                 if (result.multiHandLandmarks() != null) { //Se houver a detecção de alguma mão, ou seja, for diferente de null
-                    for (NormalizedLandmarkList landmarks : result.multiHandLandmarks()) { //Para cada landmark dentro do resultado
+                    for (LandmarkProto.NormalizedLandmarkList landmarks : result.multiHandLandmarks()) { //Para cada landmark dentro do resultado
                         handLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList()); //Chama o método da classe HandLandmarksOverlayView, que desenha os landmarks na tela
                         //todo mudar para 3D
                     }
@@ -226,9 +327,5 @@ public class TryOnTraseiro extends AppCompatActivity implements LifecycleOwner{
             }
         });
     }
-
-
-
-
 
 }
