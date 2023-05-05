@@ -29,8 +29,9 @@ public class Home extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(getApplicationContext(),TryOn.class);
-                startActivity(it);
+                Intent tryOnIntent = new Intent(getApplicationContext(), TryOn.class);
+                startActivity(tryOnIntent);
+
             }
         });
 
@@ -38,11 +39,17 @@ public class Home extends AppCompatActivity {
         bnv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.carrinho:
-
+                        Intent carrinhoIntent = new Intent(getApplicationContext(), Carrinho.class);
+                        startActivity(carrinhoIntent);
+                        break;
                     case R.id.produtos:
-                        return false;
+                        Intent catalogoIntent = new Intent(getApplicationContext(), Catalogo.class);
+                        startActivity(catalogoIntent);
+                        break;
+                    default:
+                        break;
                 }
                 return false;
             }
@@ -53,7 +60,7 @@ public class Home extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_search,menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
@@ -67,7 +74,6 @@ public class Home extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
 
 
                 return false;

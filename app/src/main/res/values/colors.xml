@@ -11,4 +11,6 @@
     <color name="amarelo_fraco">#B3E6BA77</color>
     <color name="titulos">#144D83</color>
     <color name="textos">#8CA1C5</color>
+    <color name="fundo_catalogo">#B2E1BA77</color>
+    <color name="verde_botao">#FFE6BB</color>
 </resources>

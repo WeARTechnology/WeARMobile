@@ -3,7 +3,8 @@ plugins {
     id 'com.android.application'
 }
 
-
+task wrapper{}
+task prepareKotlinBuildScriptModel{}
 
 android {
     namespace 'com.example.wearmobile'
@@ -57,6 +58,4 @@ dependencies {
     implementation 'com.google.mediapipe:facemesh:latest.release'
     implementation 'com.google.mediapipe:hands:latest.release'
     implementation 'com.google.mlkit:mediapipe-internal:latest.release'
-
-
 }
