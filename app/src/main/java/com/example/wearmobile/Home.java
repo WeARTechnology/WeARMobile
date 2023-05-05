@@ -21,7 +21,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.azul)));
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
 
 
         FloatingActionButton btn = findViewById(R.id.floatingActionButton2);
@@ -41,12 +41,11 @@ public class Home extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.carrinho:
-                        Intent carrinhoIntent = new Intent(getApplicationContext(), Carrinho.class);
-                        startActivity(carrinhoIntent);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new CarrinhoFragment()).commit();
                         break;
                     case R.id.produtos:
-                        Intent catalogoIntent = new Intent(getApplicationContext(), Catalogo.class);
-                        startActivity(catalogoIntent);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new CatalogoFragment()).commit();
+
                         break;
                     default:
                         break;

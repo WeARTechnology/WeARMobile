@@ -7,5 +7,7 @@
     <string name="texto_home1">Anéis para todos os gostos e de todos os tamanhos, com Try On disponivel.</string>
     <string name="texto_home2">Diversas opções de óculos de grau e de sol com Try On diponível, tanto na web quanto no app.</string>
     <string name="texto_home3">Mais Vendidos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
