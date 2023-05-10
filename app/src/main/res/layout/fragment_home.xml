@@ -42,18 +42,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/moldura_da_home_carrinho" />
 
-                <ImageView
-                    android:id="@+id/imageView8"
-                    android:layout_width="332dp"
-                    android:layout_height="272dp"
-                    android:layout_marginTop="900dp"
-                    android:adjustViewBounds="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.493"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/moldura_da_home_carrinho" />
-
                 <TextView
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
