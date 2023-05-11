@@ -225,7 +225,7 @@
                     app:layout_constraintVertical_bias="0.836" />
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/btnVoltar"
                     android:layout_width="36dp"
                     android:layout_height="39dp"
                     android:layout_marginTop="4dp"

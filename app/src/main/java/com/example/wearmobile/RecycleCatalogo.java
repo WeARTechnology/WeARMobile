@@ -9,7 +9,7 @@ public class RecycleCatalogo {
     private String cifrao;
     private Float preco;
 
-    public RecycleCatalogo(String nome_do_produto, String caracteristica1, String caracteristica2, String caracteristica3, String cifrao, Float preco){
+    public RecycleCatalogo(String nome_do_produto, String caracteristica1, String caracteristica2, String caracteristica3, String cifrao){
         this.nome_do_produto = nome_do_produto;
         this.caracteristica1 = caracteristica1;
         this.caracteristica2 = caracteristica2;

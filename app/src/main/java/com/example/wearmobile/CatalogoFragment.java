@@ -3,6 +3,8 @@ package com.example.wearmobile;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -20,12 +22,21 @@ public class CatalogoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_catalogo, container, false);
 
-        recycler = container.findViewById(R.id.recycler);
+        recycler = view.findViewById(R.id.recycler);
+        itens = new ArrayList<RecycleCatalogo>();
+        itens.add(new RecycleCatalogo("a","a","a","a","a"));
+        itens.add(new RecycleCatalogo("a","a","a","a","a"));
+        itens.add(new RecycleCatalogo("a","a","a","a","a"));
+        adapter = new CatalogoAdapter(getContext(), itens);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recycler.setLayoutManager(layoutManager);
+        recycler.setAdapter(adapter);
+        recycler.setItemAnimator(new DefaultItemAnimator());
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_catalogo, container, false);
 
 
-
+        return view;
     }
 }
