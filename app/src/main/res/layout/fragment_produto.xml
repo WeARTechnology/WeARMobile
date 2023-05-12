@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/navbar"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:id="@+id/navbar"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/white"
     android:importantForAutofill="auto"
     android:pointerIcon="context_menu"
@@ -35,7 +35,7 @@
 
                 <ImageView
                     android:id="@+id/imageView7"
-                    android:layout_width="333dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="267dp"
                     android:layout_marginTop="40dp"
                     android:adjustViewBounds="true"
@@ -273,6 +273,7 @@
                     app:layout_constraintHorizontal_bias="0.518"
                     app:layout_constraintStart_toEndOf="@+id/button4"
                     app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
                 <ImageView
                     android:id="@+id/btnVoltar"
                     android:layout_width="36dp"

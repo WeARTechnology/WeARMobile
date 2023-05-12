@@ -23,6 +23,9 @@ public class CarrinhoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
+                Home home = new Home();
+                home.cleanSelected(getActivity());
+
             }
         });
 

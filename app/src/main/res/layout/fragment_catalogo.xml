@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:background="@color/white"
     android:importantForAutofill="auto"
     android:pointerIcon="context_menu"
@@ -13,51 +13,59 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".Home"
-        tools:layout_editor_absoluteX="-2dp"
-        tools:layout_editor_absoluteY="70dp">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".Home">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:orientation="horizontal"
             tools:layout_editor_absoluteX="-78dp"
             tools:layout_editor_absoluteY="84dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <FrameLayout
-                    android:id="@+id/fragmentHolder"
-                    android:layout_width="406dp"
-                    android:layout_height="wrap_content"
-                    tools:layout_editor_absoluteX="3dp"
-                    tools:layout_editor_absoluteY="235dp" />
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:layout_marginTop="48dp"
+                    android:text="Catalogo"
                     android:textColor="@color/titulos"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler"
-                    android:layout_width="360dp"
-                    android:layout_height="193dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginBottom="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.494"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView29" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView29"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ImageView
+                    android:id="@+id/btnVoltarCatalogo"
+                    android:layout_width="36dp"
+                    android:layout_height="39dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

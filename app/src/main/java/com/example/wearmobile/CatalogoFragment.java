@@ -1,5 +1,6 @@
 package com.example.wearmobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -26,15 +27,15 @@ public class CatalogoFragment extends Fragment {
 
         recycler = view.findViewById(R.id.recycler);
         itens = new ArrayList<RecycleCatalogo>();
-        itens.add(new RecycleCatalogo("a","a","a","a","a"));
-        itens.add(new RecycleCatalogo("a","a","a","a","a"));
-        itens.add(new RecycleCatalogo("a","a","a","a","a"));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
         adapter = new CatalogoAdapter(getContext(), itens);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
         recycler.setItemAnimator(new DefaultItemAnimator());
         // Inflate the layout for this fragment
+
 
 
         return view;

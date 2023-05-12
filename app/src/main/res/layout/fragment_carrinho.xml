@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:background="@color/white"
     android:importantForAutofill="auto"
     android:pointerIcon="context_menu"
@@ -14,9 +14,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:context=".Home"
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="67dp">
+        tools:layout_editor_absoluteX="55dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,7 +104,7 @@
                     android:id="@+id/btnVoltar"
                     android:layout_width="36dp"
                     android:layout_height="39dp"
-                    android:layout_marginTop="312dp"
+                    android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.042"
                     app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +136,7 @@
                 <Button
                     android:id="@+id/button2"
                     android:layout_width="171dp"
-                    android:layout_height="46dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="8dp"
                     android:text="Button"
                     app:layout_constraintEnd_toEndOf="parent"
