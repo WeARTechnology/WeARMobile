@@ -164,7 +164,7 @@ public class TryOn extends AppCompatActivity {
             startCamera(); //Inicializa a câmera
         } else {
             Toast.makeText(this, "É necessario habilitar a câmera pra usar o TryON", Toast.LENGTH_SHORT).show(); //Mensagem para o usuário
-            Intent it = new Intent(getApplicationContext(),Home.class); //Se naõ deu a permissão, volta para o home
+            Intent it = new Intent(getApplicationContext(), MainActivity.class); //Se naõ deu a permissão, volta para o home
             startActivity(it);
         }
     }
@@ -270,7 +270,7 @@ public class TryOn extends AppCompatActivity {
                 cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, imageAnalysis);
             } catch (ExecutionException | InterruptedException e) { //Caso der erro, dá um catch e retorna a home
                 e.printStackTrace();
-                Intent it = new Intent(getApplicationContext(), Home.class);
+                Intent it = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(it);
             }
         }, ContextCompat.getMainExecutor(this)); //Define que, quem faz essa ação é a Activity atual

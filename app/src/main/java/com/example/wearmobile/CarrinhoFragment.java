@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
 
@@ -23,8 +22,8 @@ public class CarrinhoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
-                Home home = new Home();
-                home.cleanSelected(getActivity());
+                MainActivity mainActivity = new MainActivity();
+                mainActivity.cleanSelected(getActivity());
 
             }
         });

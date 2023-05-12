@@ -8,7 +8,7 @@
     android:importantForAutofill="auto"
     android:pointerIcon="context_menu"
     android:verticalScrollbarPosition="left"
-    tools:context=".Home">
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:id="@+id/fragmentHolder"

@@ -2,9 +2,7 @@ package com.example.wearmobile;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,17 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class Home extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     BottomNavigationView bnv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
 
 

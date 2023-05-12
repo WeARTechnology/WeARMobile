@@ -8,12 +8,12 @@
     android:importantForAutofill="auto"
     android:pointerIcon="context_menu"
     android:verticalScrollbarPosition="left"
-    tools:context=".Home">
+    tools:context=".MainActivity">
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        tools:context=".Home"
+        tools:context=".MainActivity"
         tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="0dp">
 

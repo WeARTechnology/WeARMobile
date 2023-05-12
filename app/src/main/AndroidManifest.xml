@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Para permitir o uso da camera -->
     <uses-permission
         android:name="android.permission.CAMERA"
@@ -16,8 +15,8 @@
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/logoandroid"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logoandroid"
@@ -39,7 +38,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Home"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,9 +50,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".Catalogo" />
-        <activity android:name=".Produto" />
-        <activity android:name=".Carrinho" />
     </application>
 
 </manifest>
