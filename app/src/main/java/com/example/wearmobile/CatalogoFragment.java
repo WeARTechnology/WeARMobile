@@ -29,6 +29,18 @@ public class CatalogoFragment extends Fragment {
         itens = new ArrayList<RecycleCatalogo>();
         itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
         itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
+        itens.add(new RecycleCatalogo("a","a","a","a","a", 10));
         adapter = new CatalogoAdapter(getContext(), itens);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(layoutManager);

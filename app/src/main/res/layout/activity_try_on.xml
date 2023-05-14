@@ -1,22 +1,64 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TryOn">
-
-
-    <Button
-        android:id="@+id/btnVirar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Virar" />
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_view_frontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
 
-</RelativeLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="130dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/aaaa" />
+
+                <ImageView
+                    android:layout_width="130dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/aaaa" />
+
+                <ImageView
+                    android:layout_width="130dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/aaaa" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/btnVirar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/baseline_flip_camera_android_24"
+                android:gravity="center"
+                android:scaleX="0.6"
+                android:scaleY="1"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="150dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
