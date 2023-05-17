@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -63,7 +64,7 @@ public class TryOn extends AppCompatActivity {
 
 
         //Atribuindo objetos aos views da activity
-        previewView = findViewById(R.id.preview_view_frontal);
+        previewView = findViewById(R.id.preview_view);
         handLandmarksOverlayView = new HandLandmarksOverlayView(getApplicationContext(),null);
         handLandmarksOverlayView.setRotation(90);
 
@@ -72,9 +73,7 @@ public class TryOn extends AppCompatActivity {
         switchCamera = findViewById(R.id.btnVirar);
 
         //Adicionando o XML da câmera frontal na tela de padrão
-        final ViewGroup mainLayout = findViewById(R.id.preview_view_frontal);
-        handLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
-        glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
+        final ViewGroup mainLayout = findViewById(R.id.preview_view);
         mainLayout.addView(glassesLandmarksOverlayView);
 
 
@@ -99,30 +98,23 @@ public class TryOn extends AppCompatActivity {
         facemesh = new FaceMesh(getApplicationContext(), faceMeshOptions);
 
 
-        //Chamando os outros métodos da clase para rodarem
-        requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
-        initializateFace(); //Método que inicializa o desenho do rosto
+        //Esse método espera a criação/o desenho do mainLayout na tela, para só depois pegar sua altura e sua largura,
+        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() { //Quando ele termina de desenhar, roda a função
+                handLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
+                handLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
+                glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
+                glassesLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
 
+            }
+        });
 
         //Listener do clique do botão que troca de câmera
         switchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(frontal != true){ //Quando o botão for clicado, inverte do frontal para o traseiro, definindo o frontal como true, o que fará que na proxima vez ele vá para o traseiro
-                    if(handLandmarksOverlayView.getParent() != null){
-                        mainLayout.removeView(handLandmarksOverlayView);
-                    }
-
-                    if(glassesLandmarksOverlayView.getParent() == null){
-                        mainLayout.addView(glassesLandmarksOverlayView);
-                    }
-
-                    //Chamando os outros métodos da clase para rodarem
-                    requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
-                    initializateFace(); //Método que inicializa o desenho do rosto
-                    frontal = true;
-
-                }else{
+                if(frontal){ //Quando o botão for clicado, inverte do frontal para o traseiro, definindo o frontal como true, o que fará que na proxima vez ele vá para o traseiro
                     if(glassesLandmarksOverlayView.getParent() != null){
                         mainLayout.removeView(glassesLandmarksOverlayView);
                     }
@@ -131,16 +123,32 @@ public class TryOn extends AppCompatActivity {
 
                     }
 
-                    //Chamando os outros métodos da clase para rodarem
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
-                    initializeHands(); //Método que inicializa o desenho das mãos
                     frontal = false;
+
+                }else{
+                    if(handLandmarksOverlayView.getParent() != null){
+                        mainLayout.removeView(handLandmarksOverlayView);
+                    }
+
+                    if(glassesLandmarksOverlayView.getParent() == null){
+                        mainLayout.addView(glassesLandmarksOverlayView);
+                    }
+
+                    requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
+                    frontal = true;
+
                 }
             }
         });
 
-    }
+        //Chamando os outros métodos da clase para rodarem
+        initializeHands();
+        initializateFace(); //Método que inicializa o desenho do rosto
 
+
+
+    }
 
     private void requestCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -219,7 +227,7 @@ public class TryOn extends AppCompatActivity {
                 preview = new Preview.Builder().build();
                 cameraSelector = new CameraSelector.Builder()
                         //Utilização de operador ternário para, se a frontal for true definir a camêra frontal, senão a traseira
-                        .requireLensFacing(frontal == true ? CameraSelector.LENS_FACING_FRONT : CameraSelector.LENS_FACING_BACK)
+                        .requireLensFacing(frontal ? CameraSelector.LENS_FACING_FRONT : CameraSelector.LENS_FACING_BACK)
                         .build();
 
                 //Define para qual superficie a preview vai, que no caso, é para o previewView
@@ -253,7 +261,7 @@ public class TryOn extends AppCompatActivity {
                                 imageProxy.close(); //Fecha o método
                                 return;
                             } else { //Caso tudo esteja certo, envia a imagem ao mediapipe
-                                if(frontal == true) {
+                                if(frontal) {
                                     facemesh.send(scaledBitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
                                 }
                                 else
@@ -277,17 +285,7 @@ public class TryOn extends AppCompatActivity {
     }
 
     private void initializateFace() {
-        //Cria as opções do facemesh, por exemplo, a confiança minima, e assim por diante
-        FaceMeshOptions faceMeshOptions = FaceMeshOptions.builder()
-                .setRunOnGpu(true)
-                .setMinDetectionConfidence(0.95F) //Confinça minima de detecção
-                .setMinTrackingConfidence(0.95F) //Confiança minima de rastreamento
-                .setRefineLandmarks(true)
-                .build();
-
-        //Cria o objeto de facemesh com as opções criadas acima
-        facemesh = new FaceMesh(this, faceMeshOptions);
-
+        requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
         facemesh.setResultListener(new ResultListener<FaceMeshResult>() {
             @Override
             public void run(FaceMeshResult result) {
@@ -305,14 +303,7 @@ public class TryOn extends AppCompatActivity {
 
     //Método que inicializa as mãos, pegando um listener do resultado do objeto de Hands, e, dentro dele, desenhando os landmarks da mão
     private void initializeHands() {
-        //Instancia o objeto de hands, definindo suas opções, como, inicializar o GPU
-        HandsOptions handsOptions = HandsOptions.builder()
-                .setRunOnGpu(true)
-                .setMaxNumHands(1) //Número máximo de mãos que ele consegue detectar
-                .setMinDetectionConfidence(0.95F) //A confiança minima na deteção (0-1)
-                .setMinTrackingConfidence(0.95F) //A confiança minima no rastreamento (0-1)
-                .build();
-        hands = new Hands(this, handsOptions);
+        requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
 
         //Inicia o resultListener, ou seja, toda vez que ele enviar uma informação para a Classe, retorna um resultado, que é pego por esse Listener
         hands.setResultListener(new ResultListener<HandsResult>() {

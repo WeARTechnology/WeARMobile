@@ -13,15 +13,6 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
         this.mContext = context;
     }
 
-    public void initScene() {
-
-    }
-
-
-    public void onRenderer(){
-
-    }
-
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
 

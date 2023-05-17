@@ -52,10 +52,6 @@
             @Override
             protected void onDraw(Canvas canvas) {
                 super.onDraw(canvas);
-                //Pega a altura e largura da tela com base no Canvas que é passado no método, Canvas representa o tamanho total daquela View na Acitivity
-                 imageWidth = canvas.getWidth();
-                 imageHeight = canvas.getHeight();
-
 
                 if (landmarks != null) { //Se não forem nulos os landmarks
                     //Cria um objeto de Paint, definindo a cor como vermelho, e como cheios

@@ -56,9 +56,7 @@ public class GlassesLandmarksOverlayView extends View {
 
     }
 
-    private PointF landmarkToScreenCoordinate(LandmarkProto.NormalizedLandmark landmark, int height, int width) {
-        imageWidth = width;
-        imageHeight = height;
+    private PointF landmarkToScreenCoordinate(LandmarkProto.NormalizedLandmark landmark) {
         float x = landmark.getX() * imageWidth;
         float y = landmark.getY() * imageHeight;
         return new PointF(x, y);
@@ -80,21 +78,53 @@ public class GlassesLandmarksOverlayView extends View {
         }
 
         for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_CONTOURS) {
-            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()),canvas.getHeight(),canvas.getWidth());
-            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()),canvas.getHeight(),canvas.getWidth());
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
         }
 
         // Repeat the above loop for other face mesh connections like FACEMESH_LEFT_EYE, FACEMESH_RIGHT_EYE, etc.
         for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_LEFT_EYE) {
-            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()),canvas.getHeight(),canvas.getWidth());
-            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()),canvas.getHeight(),canvas.getWidth());
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
         }
 
         for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_RIGHT_EYE) {
-            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()),canvas.getHeight(),canvas.getWidth());
-            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()),canvas.getHeight(),canvas.getWidth());
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
+            canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
+        }
+        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_FACE_OVAL) {
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
+            canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
+        }
+        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_LEFT_EYEBROW) {
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
+            canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
+        }
+        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_RIGHT_EYEBROW) {
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
+            canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
+        }
+
+        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_LEFT_IRIS) {
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
+            canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
+        }
+        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_RIGHT_IRIS) {
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
+            canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
+        }
+
+        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_LIPS) {
+            PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
+            PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
         }
 

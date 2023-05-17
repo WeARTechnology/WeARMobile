@@ -1,18 +1,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/frameTryOn"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     tools:context=".TryOn">
 
     <androidx.camera.view.PreviewView
-        android:id="@+id/preview_view_frontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <com.example.wearmobile.ModelGLSurfaceView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.camera.view.PreviewView>
+        android:id="@+id/preview_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 
     <LinearLayout
@@ -25,18 +21,17 @@
             android:layout_height="wrap_content"
             android:background="@drawable/baseline_flip_camera_android_24"
             android:scaleX="0.6"
-            android:scaleY="1"/>
+            android:scaleY="1" />
 
     </LinearLayout>
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="bottom"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -47,29 +42,29 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="130dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/aaaa" />
+                    <ImageView
+                        android:layout_width="130dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/aaaa" />
 
-                <ImageView
-                    android:layout_width="130dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/aaaa" />
+                    <ImageView
+                        android:layout_width="130dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/aaaa" />
 
-                <ImageView
-                    android:layout_width="130dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/aaaa"/>
+                    <ImageView
+                        android:layout_width="130dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/aaaa" />
 
 
-            </LinearLayout>
                 </LinearLayout>
-                    </HorizontalScrollView>
-                        </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
 
 </FrameLayout>
