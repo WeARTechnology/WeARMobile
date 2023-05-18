@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,8 +39,12 @@ import com.google.mediapipe.solutions.hands.Hands;
 import com.google.mediapipe.solutions.hands.HandsOptions;
 import com.google.mediapipe.solutions.hands.HandsResult;
 
+import org.rajawali3d.math.Quaternion;
+import org.rajawali3d.math.vector.Vector3;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
@@ -57,6 +62,10 @@ public class TryOn extends AppCompatActivity {
                                                                 que possui os pontos recebidos através dos dados da classe hands e desenha o esqueleto da mão*/
     private boolean frontal = true;
     private Button switchCamera;
+
+    private GLSurfaceView mGLSurfaceView;
+    private RingRender mRingRenderer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -314,5 +323,23 @@ public class TryOn extends AppCompatActivity {
             }
         });
     }
+
+    private void setupGLSurfaceView() {
+        mGLSurfaceView = new GLSurfaceView(this);
+        mRingRenderer = new RingRender(this);
+        mGLSurfaceView.setRenderer((GLSurfaceView.Renderer) mRingRenderer);
+        setContentView(mGLSurfaceView);
+    }
+
+    private void updateModelPositions(List<LandmarkProto.Landmark> handLandmarks) {
+        // Calculate the position, rotation, and scale based on the detected landmarks
+        Vector3 ringPosition = mRingRenderer.calculateRingPosition(handLandmarks);
+        Quaternion ringRotation = mRingRenderer.calculateRingRotation(handLandmarks);
+        float ringScale = mRingRenderer.calculateRingScale(handLandmarks);
+
+
+        mRingRenderer.updateModelPositions(ringPosition, ringRotation, ringScale);
+    }
+
 
 }

@@ -22,6 +22,7 @@ public class GlassesLandmarksOverlayView extends View {
     //Define os atributos da classe
     private List<LandmarkProto.NormalizedLandmark> landmarks; //Lista com os valores retornados do mediapipe, com cordenadas dos locais da mão
     private int imageWidth, imageHeight; //Altura e largura da imagem
+    private Paint linePaint;
 
     //Getters e Setters, para permitir manipulação dos valores da altura e largura, considerando que são privados
     public int getImageWidth() {
@@ -49,12 +50,8 @@ public class GlassesLandmarksOverlayView extends View {
         invalidate(); //Chama o draw dessa View
     }
 
-    private Paint linePaint;
 
 
-    private void init() {
-
-    }
 
     private PointF landmarkToScreenCoordinate(LandmarkProto.NormalizedLandmark landmark) {
         float x = landmark.getX() * imageWidth;
