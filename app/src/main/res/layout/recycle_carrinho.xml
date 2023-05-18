@@ -62,12 +62,12 @@
                     android:id="@+id/titulo_carrinho"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
                     android:text="TextView"
+                    android:textColor="@color/black"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.178"
                     app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/preco_carrinho"
@@ -92,7 +92,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/titulo_carrinho" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/finalizar_pedido"
                     android:layout_width="171dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="8dp"
@@ -110,7 +110,7 @@
                     android:background="@drawable/baseline_add_circle_outline_24"
                     android:scaleX="0.2"
                     android:scaleY="0.3"
-                    app:layout_constraintBottom_toTopOf="@+id/button2"
+                    app:layout_constraintBottom_toTopOf="@+id/finalizar_pedido"
                     app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0" />
@@ -123,7 +123,7 @@
                     android:background="@drawable/baseline_remove_circle_outline_24"
                     android:scaleX="0.2"
                     android:scaleY="0.3"
-                    app:layout_constraintBottom_toTopOf="@+id/button2"
+                    app:layout_constraintBottom_toTopOf="@+id/finalizar_pedido"
                     app:layout_constraintStart_toEndOf="@+id/btnmais"
                     app:layout_constraintTop_toTopOf="@+id/titulo_carrinho"
                     app:layout_constraintVertical_bias="1.0" />
