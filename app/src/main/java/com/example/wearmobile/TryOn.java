@@ -73,7 +73,7 @@ public class TryOn extends AppCompatActivity {
         switchCamera = findViewById(R.id.btnVirar);
 
         //Adicionando o XML da câmera frontal na tela de padrão
-        final ViewGroup mainLayout = findViewById(R.id.preview_view);
+        final ViewGroup mainLayout = findViewById(R.id.frameTryOn);
         mainLayout.addView(glassesLandmarksOverlayView);
 
 
@@ -143,7 +143,7 @@ public class TryOn extends AppCompatActivity {
         });
 
         //Chamando os outros métodos da clase para rodarem
-        initializeHands();
+        initializeHands(); //Método que inicializa o desenho da mão
         initializateFace(); //Método que inicializa o desenho do rosto
 
 
@@ -195,7 +195,7 @@ public class TryOn extends AppCompatActivity {
         int uSize = uBuffer.remaining();
         int vSize = vBuffer.remaining();
 
-        //"Método" que cria um array de bytes no formato NV21 que é uma variação de YUV, e, dentro dele, armazena os valores de YUV
+        //Função que cria um array de bytes no formato NV21 que é uma variação de YUV, e, dentro dele, armazena os valores de YUV
         byte[] nv21 = new byte[ySize + uSize + vSize];
         yBuffer.get(nv21, 0, ySize);
         vBuffer.get(nv21, ySize, vSize);
@@ -204,7 +204,7 @@ public class TryOn extends AppCompatActivity {
         //Cria efetivamente uma imagem YUV com os dados obtidos
         YuvImage yuvImage = new YuvImage(nv21, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
 
-        //"Metodo" para transformar esse YUV em jpeg, mantendo a qualidade da imagem em 100
+        //Função para transformar esse YUV em jpeg, mantendo a qualidade da imagem em 100
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         yuvImage.compressToJpeg(new Rect(0, 0, yuvImage.getWidth(), yuvImage.getHeight()), 100, out);
 
@@ -244,7 +244,6 @@ public class TryOn extends AppCompatActivity {
                     public void analyze(@NonNull ImageProxy imageProxy) {
                         //Se as dimensões da imagem forem <= a 0, significa que a imagem não existe, pois suas dimensões são invalidas
                         if (imageProxy.getWidth() <= 0 || imageProxy.getHeight() <= 0) {
-                            Log.e("TryOnTraseiro", "Dimensões da imagem inválidas, Largura=" + imageProxy.getWidth() + ", Altura=" + imageProxy.getHeight());
                             imageProxy.close(); //Fecha o analyzer
                             return;
                         } else { //Caso as dimensões estejam certas
@@ -252,21 +251,17 @@ public class TryOn extends AppCompatActivity {
                             //Cria um bitmap da imagem fornecida, utilizando o método interno da classe, e passando o imageProxy
                             Bitmap bitmap = TryOn.this.imageProxyToBitmap(imageProxy);
 
-                            //Muda a escala desse bitmap, para um tamanho que o Mediapipe reconheça, que é 256x256px
-                            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true);
-
                             //Caso o tamanho do bitmap for invalido, <= 0, ele fecha o método
-                            if (bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0 || scaledBitmap.getWidth() <= 0 || scaledBitmap.getHeight() <= 0) {
-                                Log.e("TryOnTraseiro", "Dimensões da imagem inválidas, Largura=" + bitmap.getWidth() + ", Altura=" + bitmap.getHeight());
+                            if (bitmap.getWidth() <= 0 || bitmap.getHeight() <= 0) {
                                 imageProxy.close(); //Fecha o método
                                 return;
                             } else { //Caso tudo esteja certo, envia a imagem ao mediapipe
                                 if(frontal) {
-                                    facemesh.send(scaledBitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
+                                    facemesh.send(bitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
                                 }
                                 else
                                 {
-                                    hands.send(scaledBitmap,imageProxy.getImageInfo().getTimestamp());
+                                    hands.send(bitmap,imageProxy.getImageInfo().getTimestamp());
                                 }
                             }
                             imageProxy.close(); //Ao fim da função, fecha o ImageProxy que é dado pelo Analyze
