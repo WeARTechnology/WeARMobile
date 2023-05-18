@@ -12,6 +12,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -46,6 +47,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.rajawali3d.view.SurfaceView;
 
 
 public class TryOn extends AppCompatActivity {
@@ -63,14 +65,18 @@ public class TryOn extends AppCompatActivity {
     private boolean frontal = true;
     private Button switchCamera;
 
-    private GLSurfaceView mGLSurfaceView;
+
     private RingRender mRingRenderer;
+    SurfaceView surfaceView;
+    RingRender ringRenderer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_try_on);
 
+        mRingRenderer = new RingRender(getApplicationContext());
 
         //Atribuindo objetos aos views da activity
         previewView = findViewById(R.id.preview_view);
@@ -84,6 +90,7 @@ public class TryOn extends AppCompatActivity {
         //Adicionando o XML da câmera frontal na tela de padrão
         final ViewGroup mainLayout = findViewById(R.id.frameTryOn);
         mainLayout.addView(glassesLandmarksOverlayView);
+
 
 
         //Definindo a classe hands e as suas opções, por exemplo ,usar a GPU
@@ -116,6 +123,9 @@ public class TryOn extends AppCompatActivity {
                 glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
                 glassesLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
 
+                mRingRenderer.setScreenHeight(mainLayout.getHeight());
+                mRingRenderer.setScreenWidth(mainLayout.getWidth());
+
             }
         });
 
@@ -143,6 +153,10 @@ public class TryOn extends AppCompatActivity {
                     if(glassesLandmarksOverlayView.getParent() == null){
                         mainLayout.addView(glassesLandmarksOverlayView);
                     }
+                    mainLayout.addView(surfaceView);
+                    surfaceView = new SurfaceView(getApplicationContext());
+                    ringRenderer = new RingRender(getApplicationContext());
+                    surfaceView.setSurfaceRenderer(ringRenderer);
 
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = true;
@@ -318,25 +332,21 @@ public class TryOn extends AppCompatActivity {
                     for (LandmarkProto.NormalizedLandmarkList landmarks : result.multiHandLandmarks()) { //Para cada landmark dentro do resultado
                         handLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList()); //Chama o método da classe HandLandmarksOverlayView, que desenha os landmarks na tela
                         //todo mudar para 3D
+                        updateModelPositions(landmarks.getLandmarkList());
                     }
                 }
+
+
             }
         });
     }
 
-    private void setupGLSurfaceView() {
-        mGLSurfaceView = new GLSurfaceView(this);
-        mRingRenderer = new RingRender(this);
-        mGLSurfaceView.setRenderer((GLSurfaceView.Renderer) mRingRenderer);
-        setContentView(mGLSurfaceView);
-    }
 
-    private void updateModelPositions(List<LandmarkProto.Landmark> handLandmarks) {
+    private void updateModelPositions(List<LandmarkProto.NormalizedLandmark> handLandmarks) {
         // Calculate the position, rotation, and scale based on the detected landmarks
         Vector3 ringPosition = mRingRenderer.calculateRingPosition(handLandmarks);
         Quaternion ringRotation = mRingRenderer.calculateRingRotation(handLandmarks);
         float ringScale = mRingRenderer.calculateRingScale(handLandmarks);
-
 
         mRingRenderer.updateModelPositions(ringPosition, ringRotation, ringScale);
     }

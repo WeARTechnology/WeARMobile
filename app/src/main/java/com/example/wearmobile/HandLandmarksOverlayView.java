@@ -39,6 +39,7 @@
         //Construtor, que pega o contexto, e os atributos da tela em que foi chamado
         public HandLandmarksOverlayView(Context context, AttributeSet attrs) {
                 super(context,attrs);
+                ring = new RingRender(context);
             }
 
 
