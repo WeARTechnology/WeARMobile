@@ -17,6 +17,7 @@
         tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="0dp">
 
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
@@ -40,7 +41,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/moldura_da_home_carrinho" />
+                    app:srcCompat="@drawable/moldura3" />
 
                 <TextView
                     android:id="@+id/textView5"
@@ -109,7 +110,7 @@
                     app:layout_constraintStart_toStartOf="@+id/imageView4"
                     app:layout_constraintTop_toTopOf="@+id/imageView4"
                     app:layout_constraintVertical_bias="0.533"
-                    app:srcCompat="@drawable/moldura_menu" />
+                    app:srcCompat="@drawable/moldura4" />
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -168,7 +169,7 @@
                     app:layout_constraintStart_toStartOf="@+id/imageView5"
                     app:layout_constraintTop_toTopOf="@+id/imageView5"
                     app:layout_constraintVertical_bias="0.466"
-                    app:srcCompat="@drawable/moldura_menu" />
+                    app:srcCompat="@drawable/moldura4" />
 
                 <TextView
                     android:id="@+id/textView10"
@@ -224,7 +225,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/imageView28"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView10"
-                    app:srcCompat="@drawable/harry_potter" />
+                    app:srcCompat="@drawable/anel" />
 
                 <ImageView
                     android:id="@+id/imageView28"
@@ -236,7 +237,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView10"
-                    app:srcCompat="@drawable/harry_potter" />
+                    app:srcCompat="@drawable/anel" />
 
                 <ImageView
                     android:id="@+id/imageView29"
@@ -259,7 +260,7 @@
                     app:layout_constraintHorizontal_bias="0.535"
                     app:layout_constraintStart_toEndOf="@+id/imageView28"
                     app:layout_constraintTop_toBottomOf="@+id/textView10"
-                    app:srcCompat="@drawable/harry_potter" />
+                    app:srcCompat="@drawable/anel" />
 
                 <ImageView
                     android:id="@+id/imageView31"
@@ -275,7 +276,37 @@
                     app:layout_constraintStart_toStartOf="@+id/imageView7"
                     app:layout_constraintTop_toTopOf="@+id/imageView7"
                     app:layout_constraintVertical_bias="0.521"
-                    app:srcCompat="@drawable/harry_potter" />
+                    app:srcCompat="@drawable/anel" />
+
+                <Space
+                    android:layout_width="109dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView28"
+                    tools:layout_editor_absoluteX="197dp" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="61dp"
+                    android:layout_height="77dp"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView12"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView12"
+                    app:layout_constraintStart_toStartOf="@+id/imageView12"
+                    app:layout_constraintTop_toTopOf="@+id/imageView12"
+                    app:srcCompat="@drawable/anel" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="61dp"
+                    android:layout_height="77dp"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView13"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView13"
+                    app:layout_constraintStart_toStartOf="@+id/imageView13"
+                    app:layout_constraintTop_toTopOf="@+id/imageView13"
+                    app:srcCompat="@drawable/anel" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

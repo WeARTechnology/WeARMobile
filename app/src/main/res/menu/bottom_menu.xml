@@ -4,7 +4,7 @@
     <item
         android:id="@+id/carrinho"
         android:checked="false"
-        android:icon="@drawable/ic_baseline_shopping_cart_24"
+        android:icon="@drawable/carrinho"
         android:iconTintMode="multiply"
         android:title="Carrinho" />
 
@@ -15,7 +15,7 @@
 
     <item
         android:id="@+id/produtos"
-        android:icon="@drawable/ic_baseline_shopping_bag_24"
+        android:icon="@drawable/bolsa_de_produtos"
         android:title="Produtos" />
 
 </menu>

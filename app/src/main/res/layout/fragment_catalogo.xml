@@ -65,7 +65,7 @@
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
+                    app:srcCompat="@drawable/voltar" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

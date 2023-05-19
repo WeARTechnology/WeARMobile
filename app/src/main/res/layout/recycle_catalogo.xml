@@ -31,7 +31,7 @@
                 app:layout_constraintHorizontal_bias="0.054"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/moldura_catalogo2" />
+                app:srcCompat="@drawable/moldura2" />
 
             <TextView
                 android:id="@+id/nome_do_produto"
@@ -114,7 +114,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/imageView"
                 app:layout_constraintStart_toStartOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="@+id/imageView"
-                app:srcCompat="@drawable/harry_potter" />
+                app:srcCompat="@drawable/anel" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

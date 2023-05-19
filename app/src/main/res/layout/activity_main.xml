@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_camera_24"
+            android:src="@drawable/tryon"
             android:tint="@color/azul"
             app:layout_anchor="@+id/bottomAppBar"
             app:layout_anchorGravity="center"

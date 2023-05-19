@@ -153,10 +153,7 @@ public class TryOn extends AppCompatActivity {
                     if(glassesLandmarksOverlayView.getParent() == null){
                         mainLayout.addView(glassesLandmarksOverlayView);
                     }
-                    mainLayout.addView(surfaceView);
-                    surfaceView = new SurfaceView(getApplicationContext());
-                    ringRenderer = new RingRender(getApplicationContext());
-                    surfaceView.setSurfaceRenderer(ringRenderer);
+
 
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = true;

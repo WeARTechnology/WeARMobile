@@ -106,7 +106,7 @@
                     app:layout_constraintHorizontal_bias="0.042"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/baseline_arrow_back_ios_24" />
+                    app:srcCompat="@drawable/voltar" />
 
                 <ImageView
                     android:id="@+id/imageView10"
@@ -117,7 +117,7 @@
                     app:layout_constraintHorizontal_bias="0.705"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_baseline_shopping_bag_24" />
+                    app:srcCompat="@drawable/bolsa_de_produtos" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
