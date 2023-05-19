@@ -63,7 +63,9 @@ dependencies {
 
     //Implementação para a Renderização 3D Com Rajawali
     implementation 'org.rajawali3d:rajawali:1.1.970'
-    
+    implementation 'org.rajawali3d:rajawali:x.y.z'
+
+
 
 
 }
