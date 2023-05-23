@@ -3,6 +3,8 @@ package com.example.wearmobile;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -37,13 +39,15 @@ public class CarrinhoFragment extends Fragment {
 
         recycler_carrinho = view.findViewById(R.id.recycler_carrinho);
         itens = new ArrayList<RecycleCarrinho>();
-        itens.add(new RecycleCarrinho("a"));
-        itens.add(new RecycleCarrinho("a"));
-        itens.add(new RecycleCarrinho("a"));
-        itens.add(new RecycleCarrinho("a"));
-        itens.add(new RecycleCarrinho("a"));
-        itens.add(new RecycleCarrinho("a"));
-        itens.add(new RecycleCarrinho("a"));
+        itens.add(new RecycleCarrinho("a","a","a","a",1,1,1,1));
+        adapter = new CarrinhoAdapter(getContext(), itens);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recycler_carrinho.setLayoutManager(layoutManager);
+        recycler_carrinho.setAdapter(adapter);
+        recycler_carrinho.setItemAnimator(new DefaultItemAnimator());
+
+
         return view;
 
 

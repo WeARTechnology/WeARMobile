@@ -9,12 +9,11 @@ public class RecycleCarrinho {
     private String preco_carrinho;
     private String quantidade;
     private int num_da_quant;
-    private Button btnmais;
-    private Button btnmenos;
-    private Button finalizar_pedido;
+    private int btnmais;
+    private int btnmenos;
+    private int finalizar_pedido;
 
-
-    public  RecycleCarrinho(String titulo_carrinho){
+    public RecycleCarrinho(String titulo_carrinho, String cifao_carrinho, String preco_carrinho, String quantidade, int num_da_quant, int btnmais, int btnmenos, int finalizar_pedido) {
         this.titulo_carrinho = titulo_carrinho;
         this.cifao_carrinho = cifao_carrinho;
         this.preco_carrinho = preco_carrinho;
@@ -24,9 +23,6 @@ public class RecycleCarrinho {
         this.btnmenos = btnmenos;
         this.finalizar_pedido = finalizar_pedido;
     }
-
-
-
 
     public String getTitulo_carrinho() {
         return titulo_carrinho;
@@ -68,27 +64,27 @@ public class RecycleCarrinho {
         this.num_da_quant = num_da_quant;
     }
 
-    public Button getBtnmais() {
+    public int getBtnmais() {
         return btnmais;
     }
 
-    public void setBtnmais(Button btnmais) {
+    public void setBtnmais(int btnmais) {
         this.btnmais = btnmais;
     }
 
-    public Button getBtnmenos() {
+    public int getBtnmenos() {
         return btnmenos;
     }
 
-    public void setBtnmenos(Button btnmenos) {
+    public void setBtnmenos(int btnmenos) {
         this.btnmenos = btnmenos;
     }
 
-    public Button getFinalizar_pedido() {
+    public int getFinalizar_pedido() {
         return finalizar_pedido;
     }
 
-    public void setFinalizar_pedido(Button finalizar_pedido) {
+    public void setFinalizar_pedido(int finalizar_pedido) {
         this.finalizar_pedido = finalizar_pedido;
     }
 }

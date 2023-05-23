@@ -11,10 +11,10 @@ public class CarrinhoViewHolder extends RecyclerView.ViewHolder{
 
     static TextView titulo_carrinho;
     static TextView cifao_carrinho;
-    TextView preco_carrrinho;
-    TextView quantidade;
-    TextView num_da_quantidade;
-    Button btnmais, btnmenos, finalizar_pedido;
+    static TextView preco_carrrinho;
+    static TextView quantidade;
+    static TextView num_da_quantidade;
+     static Button btnmais, btnmenos, finalizar_pedido;
 
     public CarrinhoViewHolder(@NonNull View itemView) {
         super(itemView);
