@@ -10,6 +10,8 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <!--Para permitir o uso da API do WebService-->
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application
         android:allowBackup="true"
