@@ -42,6 +42,7 @@ public class CatalogoAdapter extends RecyclerView.Adapter<CatalogoViewHolder> {
 
 
 
+
     }
 
     @Override

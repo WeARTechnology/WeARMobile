@@ -61,6 +61,14 @@ public class CatalogoFragment extends Fragment {
             public void onSuccess(List<Produto> produtosCallback) {
 
                 itens.add(new RecycleCatalogo("","","",null));
+
+                recycler.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -109,6 +117,7 @@ public class CatalogoFragment extends Fragment {
                         recycler.setLayoutManager(layoutManager);
                         recycler.setItemAnimator(new DefaultItemAnimator());
                         recycler.setAdapter(adapter);
+
 
                         callback.onSuccess(produtos);
                     }
