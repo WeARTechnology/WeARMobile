@@ -31,12 +31,10 @@ public class CatalogoAdapter extends RecyclerView.Adapter<CatalogoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CatalogoViewHolder holder, int position) {
         RecycleCatalogo recycleCatalogo = itens.get(position);
-        CatalogoViewHolder.nome_do_produto.setText(recycleCatalogo.getNome_do_produto());
-        CatalogoViewHolder.caracteristica1.setText(recycleCatalogo.getCaracteristica1());
-        CatalogoViewHolder.caracteristica2.setText(recycleCatalogo.getCaracteristica2());
-        CatalogoViewHolder.caracteristica3.setText(recycleCatalogo.getCaracteristica3());
-        CatalogoViewHolder.cifrao.setText(recycleCatalogo.getCifrao());
-        CatalogoViewHolder.preco.setText(""+recycleCatalogo.getPreco());
+        holder.nome_do_produto.setText(recycleCatalogo.getNome_do_produto());
+        holder.quantidade_do_produto.setText(recycleCatalogo.getQuantidade_do_produto());
+        holder.preco.setText(recycleCatalogo.getPreco());
+        holder.imgProduto.setImageBitmap(recycleCatalogo.getImgProduto());
 
 
 

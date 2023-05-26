@@ -9,5 +9,6 @@
     <string name="texto_home3">Mais Vendidos</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Cifrão">R$</string>
 
 </resources>

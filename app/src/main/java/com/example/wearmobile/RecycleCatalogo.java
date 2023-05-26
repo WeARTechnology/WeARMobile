@@ -1,21 +1,28 @@
 package com.example.wearmobile;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
 public class RecycleCatalogo {
 
     private String nome_do_produto;
-    private String caracteristica1;
-    private String caracteristica2;
-    private String caracteristica3;
-    private String cifrao;
-    private Float preco;
+    private String quantidade_do_produto;
+    private String preco;
+    private Bitmap imgProduto;
 
-    public RecycleCatalogo(String nome_do_produto, String caracteristica1, String caracteristica2, String caracteristica3, String cifrao, float preco){
+    public RecycleCatalogo(String nome_do_produto, String quantidade_do_produto, String preco, Bitmap imgProduto){
         this.nome_do_produto = nome_do_produto;
-        this.caracteristica1 = caracteristica1;
-        this.caracteristica2 = caracteristica2;
-        this.caracteristica3 = caracteristica3;
-        this.cifrao = cifrao;
+        this.quantidade_do_produto = quantidade_do_produto;
         this.preco = preco;
+        this.imgProduto = imgProduto;
+    }
+
+    public Bitmap getImgProduto() {
+        return imgProduto;
+    }
+
+    public void Bitmap (Bitmap imgProduto) {
+        this.imgProduto = imgProduto;
     }
 
     public String getNome_do_produto() {
@@ -26,43 +33,19 @@ public class RecycleCatalogo {
         this.nome_do_produto = nome_do_produto;
     }
 
-    public String getCaracteristica1() {
-        return caracteristica1;
+    public String getQuantidade_do_produto() {
+        return quantidade_do_produto;
     }
 
-    public void setCaracteristica1(String caracteristica1) {
-        this.caracteristica1 = caracteristica1;
+    public void setQuantidade_do_produto(String quantidade_do_produto) {
+        this.quantidade_do_produto = quantidade_do_produto;
     }
 
-    public String getCaracteristica2() {
-        return caracteristica2;
-    }
-
-    public void setCaracteristica2(String caracteristica2) {
-        this.caracteristica2 = caracteristica2;
-    }
-
-    public String getCaracteristica3() {
-        return caracteristica3;
-    }
-
-    public void setCaracteristica3(String caracteristica3) {
-        this.caracteristica3 = caracteristica3;
-    }
-
-    public String getCifrao() {
-        return cifrao;
-    }
-
-    public void setCifrao(String cifrao) {
-        this.cifrao = cifrao;
-    }
-
-    public Float getPreco() {
+    public String getPreco() {
         return preco;
     }
 
-    public void setPreco(Float preco) {
+    public void setPreco(String preco) {
         this.preco = preco;
     }
 }

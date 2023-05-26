@@ -22,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="105dp"
-                android:layout_height="120dp"
+                android:layout_width="131dp"
+                android:layout_height="129dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -35,78 +35,43 @@
 
             <TextView
                 android:id="@+id/nome_do_produto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
+                android:layout_width="198dp"
+                android:layout_height="35dp"
+                android:text="Nome"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.085"
+                app:layout_constraintHorizontal_bias="0.482"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.008" />
+                app:layout_constraintVertical_bias="0.15" />
 
             <TextView
-                android:id="@+id/caracteristica1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/quantidadeProduto"
+                android:layout_width="167dp"
+                android:layout_height="27dp"
+                android:text="Quantidade"
+                app:layout_constraintBottom_toTopOf="@+id/preco"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.085"
+                app:layout_constraintHorizontal_bias="0.318"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/nome_do_produto"
-                app:layout_constraintVertical_bias="0.131" />
-
-            <TextView
-                android:id="@+id/caracteristica2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="84dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.145"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/caracteristica1"
-                app:layout_constraintVertical_bias="0.22" />
-
-            <TextView
-                android:id="@+id/caracteristica3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="84dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.145"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/caracteristica2"
-                app:layout_constraintVertical_bias="0.483" />
-
-            <TextView
-                android:id="@+id/cifrao"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="84dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="0.285" />
 
             <TextView
                 android:id="@+id/preco"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
-                android:text="TextView"
+                android:layout_width="113dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="27dp"
+                android:text="Preco"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintHorizontal_bias="0.008"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/nome_do_produto"
+                app:layout_constraintVertical_bias="0.548" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/imgProduto"
                 android:layout_width="60dp"
                 android:layout_height="84dp"
                 android:scaleType="fitXY"
