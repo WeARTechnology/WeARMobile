@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ring_size"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/postnobillscolombosemibold"
+    android:text="@string/txtTamanhoSelecionar"
+    android:textColor="@color/textos"
+    android:textSize="24sp"
+    android:textStyle="bold" />

@@ -1,90 +1,73 @@
 package com.example.wearmobile;
 
+import android.graphics.Bitmap;
 import android.widget.Button;
 
 public class RecycleCarrinho {
 
-    private String titulo_carrinho;
-    private String cifao_carrinho;
-    private String preco_carrinho;
-    private String quantidade;
-    private int num_da_quant;
-    private int btnmais;
-    private int btnmenos;
-    private int finalizar_pedido;
+    private String nome,quantidade,preco, edtQntd, btnRemover,txtTamanho;
+    private Bitmap imagem;
+    private int id;
 
-    public RecycleCarrinho(String titulo_carrinho, String cifao_carrinho, String preco_carrinho, String quantidade, int num_da_quant, int btnmais, int btnmenos, int finalizar_pedido) {
-        this.titulo_carrinho = titulo_carrinho;
-        this.cifao_carrinho = cifao_carrinho;
-        this.preco_carrinho = preco_carrinho;
+    public RecycleCarrinho(String nome, String quantidade, String preco, String edtQntd, Bitmap imagem, int id, String txtTamanho) {
+        this.nome = nome;
         this.quantidade = quantidade;
-        this.num_da_quant = num_da_quant;
-        this.btnmais = btnmais;
-        this.btnmenos = btnmenos;
-        this.finalizar_pedido = finalizar_pedido;
+        this.preco = preco;
+        this.edtQntd = edtQntd;
+        this.imagem = imagem;
+        this.id = id;
+        this.txtTamanho = txtTamanho;
     }
 
-    public String getTitulo_carrinho() {
-        return titulo_carrinho;
+    //Getters
+    public String getNome() {
+        return nome;
     }
-
-    public void setTitulo_carrinho(String titulo_carrinho) {
-        this.titulo_carrinho = titulo_carrinho;
-    }
-
-    public String getCifao_carrinho() {
-        return cifao_carrinho;
-    }
-
-    public void setCifao_carrinho(String cifao_carrinho) {
-        this.cifao_carrinho = cifao_carrinho;
-    }
-
-    public String getPreco_carrinho() {
-        return preco_carrinho;
-    }
-
-    public void setPreco_carrinho(String preco_carrinho) {
-        this.preco_carrinho = preco_carrinho;
-    }
-
     public String getQuantidade() {
         return quantidade;
     }
+    public String getPreco() {
+        return preco;
+    }
+    public String getEdtQntd() {
+        return edtQntd;
+    }
+    public String getBtnRemover() {
+        return btnRemover;
+    }
+    public Bitmap getImagem() {
+        return imagem;
+    }
+    public int getProdId() {
+        return id;
+    }
+    public String getTxtTamanho() {
+        return txtTamanho;
+    }
 
+    //Setters
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
     public void setQuantidade(String quantidade) {
         this.quantidade = quantidade;
     }
-
-    public int getNum_da_quant() {
-        return num_da_quant;
+    public void setPreco(String preco) {
+        this.preco = preco;
     }
-
-    public void setNum_da_quant(int num_da_quant) {
-        this.num_da_quant = num_da_quant;
+    public void setEdtQntd(String edtQntd) {
+        this.edtQntd = edtQntd;
     }
-
-    public int getBtnmais() {
-        return btnmais;
+    public void setBtnRemover(String btnRemover) {
+        this.btnRemover = btnRemover;
     }
-
-    public void setBtnmais(int btnmais) {
-        this.btnmais = btnmais;
+    public void setImagem(Bitmap imagem) {
+        this.imagem = imagem;
     }
-
-    public int getBtnmenos() {
-        return btnmenos;
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public void setBtnmenos(int btnmenos) {
-        this.btnmenos = btnmenos;
-    }
-
-    public int getFinalizar_pedido() {
-        return finalizar_pedido;
-    }
-
-    public void setFinalizar_pedido(int finalizar_pedido) {
-        this.finalizar_pedido = finalizar_pedido;
+    public void setTxtTamanho(String txtTamanho) {
+        this.txtTamanho = txtTamanho;
     }
 }

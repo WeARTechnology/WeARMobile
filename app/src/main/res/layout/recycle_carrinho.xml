@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:importantForAutofill="auto"
     android:pointerIcon="context_menu"
@@ -11,126 +11,142 @@
     tools:context=".MainActivity">
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="-78dp"
-            tools:layout_editor_absoluteY="84dp">
+            android:orientation="vertical"
+            android:visibility="visible">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+
+            <TextView
+                android:id="@+id/txtPrecoCarrinho"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/postnobillscolomboregular"
+                android:text="@string/txtPreco"
+                android:textColor="@color/textos"
+                android:textColorHint="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/molduraCarrinho"
+                app:layout_constraintTop_toBottomOf="@+id/titulo_carrinho" />
 
+            <ImageView
+                android:id="@+id/molduraCarrinho"
+                android:layout_width="170dp"
+                android:layout_height="226dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.061"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtTituloCarrinho"
+                app:srcCompat="@drawable/moldura1" />
 
-                <TextView
-                    android:id="@+id/quantidade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.178"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toBottomOf="@+id/preco_carrinho" />
+            <TextView
+                android:id="@+id/titulo_carrinho"
+                android:layout_width="209dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/postnobillscolomboextrabold"
+                android:text="@string/txtNome"
+                android:textColor="@color/titulos"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/molduraCarrinho"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/num_da_quant"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.72"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toBottomOf="@+id/preco_carrinho" />
+            <TextView
+                android:id="@+id/txtQntdCarrinho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/postnobillscolomboregular"
+                android:text="@string/txtQntd"
+                android:textColor="@color/textos"
+                android:textColorHint="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/molduraCarrinho"
+                app:layout_constraintTop_toBottomOf="@+id/txtPrecoCarrinho" />
 
-                <ImageView
-                    android:id="@+id/quadro_carrinho"
-                    android:layout_width="158dp"
-                    android:layout_height="166dp"
-                    android:layout_marginTop="32dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.061"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView14"
-                    app:srcCompat="@drawable/moldura1" />
+            <Button
+                android:id="@+id/btnRemoverProduto"
+                android:layout_width="171dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/azul"
+                android:fontFamily="@font/postnobillscolombosemibold"
+                android:text="@string/btnRemoverProd"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:cornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.484"
+                app:layout_constraintStart_toEndOf="@+id/molduraCarrinho"
+                app:layout_constraintTop_toBottomOf="@+id/txtTamanho" />
 
-                <TextView
-                    android:id="@+id/titulo_carrinho"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textColor="@color/black"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.178"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/edtQntdCarrinho"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="@font/postnobillscolomboregular"
+                android:hint="@string/hello_blank_fragment"
+                android:inputType="number"
+                android:textColor="@color/textos"
+                android:textColorHint="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/btnRemoverProduto"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/txtQntdCarrinho"
+                app:layout_constraintTop_toBottomOf="@+id/txtPrecoCarrinho"
+                app:layout_constraintVertical_bias="0.0" />
 
-                <TextView
-                    android:id="@+id/preco_carrinho"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="36dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.296"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toBottomOf="@+id/titulo_carrinho" />
+            <ImageView
+                android:id="@+id/ivImagemProdCarrinho"
+                android:layout_width="128dp"
+                android:layout_height="147dp"
+                android:adjustViewBounds="false"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/molduraCarrinho"
+                app:layout_constraintEnd_toEndOf="@+id/molduraCarrinho"
+                app:layout_constraintStart_toStartOf="@+id/molduraCarrinho"
+                app:layout_constraintTop_toTopOf="@+id/molduraCarrinho"
+                app:srcCompat="@drawable/anel" />
 
-                <TextView
-                    android:id="@+id/cifao_carrinho"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="36dp"
-                    android:text="TextView"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.178"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toBottomOf="@+id/titulo_carrinho" />
+            <TextView
+                android:id="@+id/txtTamanho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/postnobillscolomboregular"
+                android:text="@string/txtTamanho"
+                android:textColor="@color/textos"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/molduraCarrinho"
+                app:layout_constraintTop_toBottomOf="@+id/txtQntdCarrinho" />
 
-                <Button
-                    android:id="@+id/finalizar_pedido"
-                    android:layout_width="171dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.47"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toBottomOf="@+id/quantidade" />
-
-                <Button
-                    android:id="@+id/btnmais"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="64dp"
-                    android:background="@drawable/sinal_de_mais"
-                    android:scaleX="0.2"
-                    android:scaleY="0.3"
-                    app:layout_constraintBottom_toTopOf="@+id/finalizar_pedido"
-                    app:layout_constraintStart_toEndOf="@+id/quadro_carrinho"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
-
-                <Button
-                    android:id="@+id/btnmenos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:background="@drawable/sinal_de_menos"
-                    android:scaleX="0.2"
-                    android:scaleY="0.3"
-                    app:layout_constraintBottom_toTopOf="@+id/finalizar_pedido"
-                    app:layout_constraintStart_toEndOf="@+id/btnmais"
-                    app:layout_constraintTop_toTopOf="@+id/titulo_carrinho"
-                    app:layout_constraintVertical_bias="1.0" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

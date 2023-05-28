@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="400dp"
+        android:layout_width="410dp"
         android:layout_height="140dp"
         android:backgroundTint="@color/fundo_catalogo"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,13 +22,13 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="131dp"
-                android:layout_height="129dp"
+                android:layout_width="117dp"
+                android:layout_height="134dp"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:scaleType="fitStart"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.054"
+                app:layout_constraintHorizontal_bias="0.024"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/moldura2" />
@@ -37,46 +37,59 @@
                 android:id="@+id/nome_do_produto"
                 android:layout_width="198dp"
                 android:layout_height="35dp"
-                android:text="Nome"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/postnobillscolombomedium"
+                android:text="@string/txtNome"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.482"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.15" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/quantidadeProduto"
                 android:layout_width="167dp"
                 android:layout_height="27dp"
-                android:text="Quantidade"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/postnobillscolombomedium"
+                android:text="@string/txtQntd"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/preco"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.318"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/nome_do_produto"
-                app:layout_constraintVertical_bias="0.285" />
+                app:layout_constraintTop_toBottomOf="@+id/nome_do_produto" />
 
             <TextView
                 android:id="@+id/preco"
                 android:layout_width="113dp"
                 android:layout_height="23dp"
-                android:layout_marginStart="27dp"
-                android:text="Preco"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/postnobillscolombomedium"
+                android:text="@string/txtPreco"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.008"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/nome_do_produto"
-                app:layout_constraintVertical_bias="0.548" />
+                app:layout_constraintTop_toBottomOf="@+id/quantidadeProduto" />
 
             <ImageView
                 android:id="@+id/imgProduto"
-                android:layout_width="60dp"
-                android:layout_height="84dp"
-                android:scaleType="fitXY"
+                android:layout_width="72dp"
+                android:layout_height="96dp"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
                 app:layout_constraintEnd_toEndOf="@+id/imageView"
+                app:layout_constraintHorizontal_bias="0.4"
                 app:layout_constraintStart_toStartOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="@+id/imageView"
                 app:srcCompat="@drawable/anel" />

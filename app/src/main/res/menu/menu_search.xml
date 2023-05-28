@@ -4,9 +4,10 @@
 
     <item
         android:id="@+id/action_search"
-        android:title="Pesquisar"
         android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/txtPesquisar"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView" />
+
 
 </menu>

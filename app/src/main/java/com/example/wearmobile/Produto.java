@@ -12,7 +12,7 @@ public class Produto {
     public boolean modelo3d;
     public int id;
     public String imagem;
-
+    public int idSimilar;
 
 
     //Construtor vazio

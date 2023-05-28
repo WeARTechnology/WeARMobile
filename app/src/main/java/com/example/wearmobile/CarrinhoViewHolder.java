@@ -2,6 +2,8 @@ package com.example.wearmobile;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -9,23 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CarrinhoViewHolder extends RecyclerView.ViewHolder{
 
-    static TextView titulo_carrinho;
-    static TextView cifao_carrinho;
-    static TextView preco_carrrinho;
-    static TextView quantidade;
-    static TextView num_da_quantidade;
-     static Button btnmais, btnmenos, finalizar_pedido;
+    TextView txtNome,txtQuantidade,txtPreco, txtTamanho;
+    EditText edtQntd;
+    Button btnRemover;
+    ImageView ivProduto;
 
     public CarrinhoViewHolder(@NonNull View itemView) {
         super(itemView);
-        titulo_carrinho = itemView.findViewById(R.id.titulo_carrinho);
-        cifao_carrinho = itemView.findViewById(R.id.cifao_carrinho);
-        preco_carrrinho = itemView.findViewById(R.id.preco_carrinho);
-        quantidade = itemView.findViewById(R.id.quantidade);
-        num_da_quantidade = itemView.findViewById(R.id.num_da_quant);
-        btnmais = itemView.findViewById(R.id.btnmais);
-        btnmenos = itemView.findViewById(R.id.btnmenos);
-        finalizar_pedido = itemView.findViewById(R.id.finalizar_pedido);
-
+        txtNome = itemView.findViewById(R.id.titulo_carrinho);
+        txtQuantidade = itemView.findViewById(R.id.txtQntdCarrinho);
+        txtPreco = itemView.findViewById(R.id.txtPrecoCarrinho);
+        edtQntd = itemView.findViewById(R.id.edtQntdCarrinho);
+        btnRemover = itemView.findViewById(R.id.btnRemoverProduto);
+        ivProduto = itemView.findViewById(R.id.ivImagemProdCarrinho);
+        txtTamanho = itemView.findViewById(R.id.txtTamanho);
     }
+
 }
