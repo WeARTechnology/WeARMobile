@@ -50,8 +50,8 @@
 
                 <TextView
                     android:id="@+id/txtNomeProd"
-                    android:layout_width="296dp"
-                    android:layout_height="41dp"
+                    android:layout_width="354dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:fontFamily="@font/postnobillscolombosemibold"
                     android:text="@string/txtNome"
