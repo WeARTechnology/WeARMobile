@@ -32,5 +32,6 @@
     <string name="txtQntd">Quantidade:</string>
     <string name="txtCarrinhoMsg">Você ainda não tem nenhum produto no seu carrinho! </string>
     <string name="txtTamanho">Tamanho:</string>
+    <string name="txtMessageCarregando">Estamos carregando as informações, por favor aguarde!</string>
 
 </resources>

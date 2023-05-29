@@ -64,9 +64,6 @@ public class TryOn extends AppCompatActivity {
                                                                 que possui os pontos recebidos através dos dados da classe hands e desenha o esqueleto da mão*/
     private boolean frontal = true;
     private Button switchCamera;
-
-
-    private RingRender mRingRenderer;
     SurfaceView surfaceView;
     RingRender ringRenderer;
 
@@ -76,20 +73,20 @@ public class TryOn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_try_on);
 
-        mRingRenderer = new RingRender(getApplicationContext());
+        ringRenderer = new RingRender(getApplicationContext());
 
         //Atribuindo objetos aos views da activity
         previewView = findViewById(R.id.preview_view);
         handLandmarksOverlayView = new HandLandmarksOverlayView(getApplicationContext(),null);
-        handLandmarksOverlayView.setRotation(90);
+
 
         glassesLandmarksOverlayView = new GlassesLandmarksOverlayView(getApplicationContext(),null);
-        glassesLandmarksOverlayView.setRotation(-90);
         switchCamera = findViewById(R.id.btnVirar);
 
         //Adicionando o XML da câmera frontal na tela de padrão
         final ViewGroup mainLayout = findViewById(R.id.frameTryOn);
         mainLayout.addView(glassesLandmarksOverlayView);
+
 
 
 
@@ -123,8 +120,8 @@ public class TryOn extends AppCompatActivity {
                 glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
                 glassesLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
 
-                mRingRenderer.setScreenHeight(mainLayout.getHeight());
-                mRingRenderer.setScreenWidth(mainLayout.getWidth());
+                ringRenderer.setScreenHeight(mainLayout.getHeight());
+                ringRenderer.setScreenWidth(mainLayout.getWidth());
 
             }
         });
@@ -153,11 +150,11 @@ public class TryOn extends AppCompatActivity {
                     if(glassesLandmarksOverlayView.getParent() == null){
                         mainLayout.addView(glassesLandmarksOverlayView);
                     }
-                    mainLayout.addView(surfaceView);
+
                     surfaceView = new SurfaceView(getApplicationContext());
                     ringRenderer = new RingRender(getApplicationContext());
                     surfaceView.setSurfaceRenderer(ringRenderer);
-
+                    mainLayout.addView(surfaceView);
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = true;
 
@@ -168,35 +165,30 @@ public class TryOn extends AppCompatActivity {
         //Chamando os outros métodos da clase para rodarem
         initializeHands(); //Método que inicializa o desenho da mão
         initializateFace(); //Método que inicializa o desenho do rosto
+        requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
 
 
 
     }
 
     private void requestCameraPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) { //Checka se a permissão foi dada
-                startCamera(); //Caso sim, inicializa a camera
-            } else {
-                // Caso não, pede a permissão da câmera
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 100); //Dá um request para a permissão de código 100 (Camera)
-                }
-            }
+        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) { //Checka se a permissão foi dada
+            startCamera(); //Caso sim, inicializa a camera
+        } else {
+            // Caso não, pede a permissão da câmera
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 100); //Dá um request para a permissão de código 100 (Camera)
         }
     }
 
 
     //Sobreescrevendo o método onRequestPermission result, para que, caso a permissão seja dada, inicalize a câmera, senão, avisa que é necessário faze-lo
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { //Descobre se a permissão foi dada
             startCamera(); //Inicializa a câmera
         } else {
             Toast.makeText(this, "É necessario habilitar a câmera pra usar o TryON", Toast.LENGTH_SHORT).show(); //Mensagem para o usuário
-            Intent it = new Intent(getApplicationContext(), MainActivity.class); //Se naõ deu a permissão, volta para o home
-            startActivity(it);
         }
     }
 
@@ -332,7 +324,6 @@ public class TryOn extends AppCompatActivity {
                     for (LandmarkProto.NormalizedLandmarkList landmarks : result.multiHandLandmarks()) { //Para cada landmark dentro do resultado
                         handLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList()); //Chama o método da classe HandLandmarksOverlayView, que desenha os landmarks na tela
                         //todo mudar para 3D
-                        updateModelPositions(landmarks.getLandmarkList());
                     }
                 }
 
@@ -344,11 +335,11 @@ public class TryOn extends AppCompatActivity {
 
     private void updateModelPositions(List<LandmarkProto.NormalizedLandmark> handLandmarks) {
         // Calculate the position, rotation, and scale based on the detected landmarks
-        Vector3 ringPosition = mRingRenderer.calculateRingPosition(handLandmarks);
-        Quaternion ringRotation = mRingRenderer.calculateRingRotation(handLandmarks);
-        float ringScale = mRingRenderer.calculateRingScale(handLandmarks);
+        Vector3 ringPosition = ringRenderer.calculateRingPosition(handLandmarks);
+        Quaternion ringRotation = ringRenderer.calculateRingRotation(handLandmarks);
+        float ringScale = ringRenderer.calculateRingScale(handLandmarks);
 
-        mRingRenderer.updateModelPositions(ringPosition, ringRotation, ringScale);
+        ringRenderer.updateModelPositions(ringPosition, ringRotation, ringScale);
     }
 
 

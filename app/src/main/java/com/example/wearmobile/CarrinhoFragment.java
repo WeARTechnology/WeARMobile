@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -41,7 +39,7 @@ public class CarrinhoFragment extends Fragment {
     private ArrayList<RecycleCarrinho> itens = new ArrayList<>(); //ArrayList com os itens da recycler
     private TextView totalCompra; //TextView com o total da compra
     private Button finalizarCompra; //Botão que finaliza a compra
-    private int id, qntd,tamanho; //Define os inteiros que pegam o valor do bundle
+    private int id, qntd, tamanho; //Define os inteiros que pegam o valor do bundle
     private Gson gson = new Gson(); //Objeto de gson, para codificar e decodificar a classe
     private ObjectMapper leitor = new ObjectMapper(); //Leitor de JSON do Jackson para ler o retorno do SharedPreferences
 
@@ -52,18 +50,22 @@ public class CarrinhoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_carrinho, container, false);
         //Pega os dados que vieram através da Fragment
         Bundle dados = getArguments();
-        if (dados != null) {
+        if (dados != null) { //Se não forem nulos, pega ID e QNTD, que vem para o Bundle independente do produto
             id = dados.getInt("ID");
             qntd = Integer.parseInt(dados.getString("qntd"));
-            tamanho = Integer.parseInt(dados.getString("tamanho"));
+
+            if (dados.getString("tamanho") != null) { //Tamanho só vem nos aneis, então é necessário verificar se não é nulo
+                tamanho = Integer.parseInt(dados.getString("tamanho"));
+            }
         }
 
 
-
         //Criando o leitor e gravador no SharedPreferences
-        SharedPreferences lerCart = view.getContext().getSharedPreferences("CartItens", Context.MODE_PRIVATE);
-        SharedPreferences lerProd = view.getContext().getSharedPreferences("Produtos", Context.MODE_PRIVATE);
-        SharedPreferences.Editor gravarCart = view.getContext().getSharedPreferences("CartItens", Context.MODE_PRIVATE).edit();
+        SharedPreferences lerCart = view.getContext().getSharedPreferences("CartItens", Context.MODE_PRIVATE); //Lê os valores que já estão no carrinho
+        SharedPreferences lerProd = view.getContext().getSharedPreferences("Produtos", Context.MODE_PRIVATE); //Lê todos os produtos do banco
+        SharedPreferences lerQntd = view.getContext().getSharedPreferences("ProdutoQntd", Context.MODE_PRIVATE); //Lê todos os produtos do banco
+        SharedPreferences.Editor gravarCart = view.getContext().getSharedPreferences("CartItens", Context.MODE_PRIVATE).edit(); //Grava novos valores no carrinho
+        SharedPreferences.Editor gravarQntd = view.getContext().getSharedPreferences("ProdutoQntd", Context.MODE_PRIVATE).edit(); //Grava novos valores no carrinho
 
         //Atribuindo os objetos aos itens da tela
         voltar = view.findViewById(R.id.btnVoltarProduto);
@@ -75,25 +77,21 @@ public class CarrinhoFragment extends Fragment {
         //Define que o Jackson não vai falhar se encontrar algo que não conhece
         leitor.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+        //Pega todos os valores ja existentes no carrinho com Map
         Map<String, String> allCartShared = (Map<String, String>) lerCart.getAll();
 
         //Se não tiver nada no lerCart, e não tiver ID, nem Quantidade
         if (allCartShared.isEmpty() && id == 0 && qntd == 0) {
-            //Remove todas as coisas da tela, e adiciona a mensagem dizendo que o carrinho está vazio
-            layoutCarrinho.removeAllViews();
-            View messageCarrinho = getLayoutInflater().inflate(R.layout.messagecarrinho, layoutCarrinho, false);
-            layoutCarrinho.addView(messageCarrinho);
+            carrinhoVazio();
 
-        }
-        else if (!allCartShared.isEmpty() && id == 0 && qntd == 0) //Se tiver valores no shared, mas não tiver id nem quantidade
+        } else if (!allCartShared.isEmpty() && id == 0 && qntd == 0) //Se tiver valores no shared, mas não tiver id nem quantidade
         {
 
             //Defino chave e valor, e pego os valores deles com base nos valores do Map allCartShared
-            String chave = null;
             String valor = null;
-            List<Produto> p = new ArrayList<>();
-            for (Map.Entry<String, String> entry : allCartShared.entrySet()) {
-                chave = entry.getKey();
+            List<Produto> p = new ArrayList<>(); //Lista dos produtos que estão no carrinho
+
+            for (Map.Entry<String, String> entry : allCartShared.entrySet()) { //Para cada chave e valor dentro do Map, pega esse valor e adiciona a lista
                 valor = entry.getValue();
                 //Pego os valores no sharedPreferences, com base no que foi passado pelo Map
                 try {
@@ -105,10 +103,14 @@ public class CarrinhoFragment extends Fragment {
 
             //Define a quantidade da compra como 0
             int valorTotalCompra = 0;
+
             //Para cada produto, pega-se o valor somando a multiplicação da quantidade pelo preço
-            for (Produto prod: p){
-                valorTotalCompra += (prod.qntd*prod.preco);
+            for (Produto prod : p) {
+                if(prod.id > 0) {
+                    valorTotalCompra += (prod.qntd * prod.preco);
+                }
             }
+
             //Adiciona o preço descoberto ao textview
             totalCompra.append(" R$" + valorTotalCompra + ".00");
             addCarrinho(p); //Adiciona o valor ao carrinho
@@ -116,6 +118,7 @@ public class CarrinhoFragment extends Fragment {
 
         } else if (allCartShared.isEmpty() && id != 0 && qntd != 0) //Se tiver id e quantidade, mas não tiver valores no shared
         {
+            //Cria um objeto de Produto, e um para pegar os valores do Shared
             Produto p = new Produto();
             Produto sharedProduct = new Produto();
 
@@ -127,13 +130,23 @@ public class CarrinhoFragment extends Fragment {
             }
 
             p = sharedProduct;
-            p.qntd = qntd;
+            p.qntd = qntd; //Define a quantidade como a passada pelo Bundle
 
+            if (tamanho != 0) //Se o Bundle tiver retornado um tamanho
+            {
+                p.tamanho = tamanho;
+                gravarCart.putString("Produto" + id + p.tamanho, gson.toJson(p)); //Grava no carrinho o nome "ProdutoXX" com ID e tamanho
+            } else //Se não tiver retornado, grava apenas o ID
+            {
+                gravarCart.putString("Produto" + id, gson.toJson(p));
+            }
+
+            //Cria uma lista de produtos para retonar, e adiciona a esta lista o produto criado
             List<Produto> prod = new ArrayList<>();
             prod.add(p);
             addCarrinho(prod);
 
-            gravarCart.putString("Produto" + id, gson.toJson(p));
+
         } else if (!allCartShared.isEmpty() && id != 0 && qntd != 0) { //Se tiver valor no carrinho, id e quantidade
 
             //Três objetos
@@ -142,11 +155,28 @@ public class CarrinhoFragment extends Fragment {
             Produto valorCarinho = new Produto(); //Produto com os valores do carrinho
             List<Produto> valoresCarrinho = new ArrayList<>();
 
-            //Pego os valores no sharedPreferences
             try {
+                //Defino valor, e pego o valor om base nos valores do Map allCartShared
+                String valor = null;
+                for (Map.Entry<String, String> entry : allCartShared.entrySet()) { //Para cada chave e valor dentro do Map, pega esse valor e adiciona a lista
+                    valor = entry.getValue();
+                    //Pego os valores no sharedPreferences, com base no que foi passado pelo Map
+                    valoresCarrinho.add(leitor.readValue(valor, Produto.class)); //Pega os valores com o leitor
+
+                }
+
+                //Pego do produto atual
                 sharedProduct = leitor.readValue(lerProd.getString("Produto" + id, ""), Produto.class); //Pega os valores com o leitor
-                valorCarinho = leitor.readValue(lerCart.getString("Produto" + id, ""), Produto.class); //Pega os valores com o leitor
-                valoresCarrinho = leitor.readValue(lerCart.getAll().toString(), new TypeReference<List<Produto>>() { });
+                if (tamanho == 0) { //Se não tiver tamanho, a busca é normal
+                    valorCarinho = leitor.readValue(lerCart.getString("Produto" + id, ""), Produto.class); //Pega os valores com o leitor
+                } else { //Se tiver tamanho, busco com o tamanho junto, assim como foi definido no if (allCartShared.isEmpty() && id != 0 && qntd != 0)
+                    for (int i = 0; i < valoresCarrinho.size(); i++) {
+                        if(valoresCarrinho.get(i).tamanho == tamanho){
+                            valorCarinho = leitor.readValue(lerCart.getString("Produto" + id + tamanho, ""), Produto.class); //Pega os valores com o leitor
+                        }
+                    }
+
+                }
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -154,26 +184,31 @@ public class CarrinhoFragment extends Fragment {
 
             //Define p como os valores do Shared
             p = sharedProduct;
-            //Define a quantidade de P, como a quantidade que já havia no carrinho mais a quantidade do Bundle
-            int quantidade = 0;
-            quantidade = qntd + valorCarinho.qntd;
-            //Se esse valor for maior do que o disponível em estoque, altera ele pro máximo disponível em estoque, e volta uma mensagem pro usuário
-            if (quantidade > sharedProduct.qntd) {
+
+            int quantidade = 0; //Cria uma quantidade = 0
+
+            quantidade = qntd + valorCarinho.qntd; //A Quantidade = quantidade passada + o que já havia no carrinho
+
+            if (quantidade > sharedProduct.qntd) { //Se ela for maior do que a disponível em estoque
                 p.qntd = sharedProduct.qntd;
                 Toast.makeText(getContext(), "Valor maior do que disponível em estoque", Toast.LENGTH_SHORT).show();
                 getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new CarrinhoFragment()).commit();
             } else {
-                p.qntd = quantidade;
-                gravarCart.putString("Produto" + id, gson.toJson(p));
+                p.qntd = quantidade; //Defino a quantidade
+                if (tamanho != 0) { //Se tiver tamanho, salva-se produto+id+tamanho, caso contrário só produto+id
+                    p.tamanho = tamanho;
+                    gravarCart.putString("Produto" + p.id + p.tamanho, gson.toJson(p));
+                } else {
+                    gravarCart.putString("Produto" + p.id, gson.toJson(p));
+                }
+
+                //Adiciona o produto p a lista de valores no carrinho, e adiciona a tela
                 valoresCarrinho.add(p);
                 addCarrinho(valoresCarrinho);
                 getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new CarrinhoFragment()).commit();
 
+
             }
-
-
-
-
         }
 
 
@@ -181,34 +216,87 @@ public class CarrinhoFragment extends Fragment {
         voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
+                //Cria um objeto da MainActivity
+                MainActivity mainActivity = (MainActivity) getContext();
+                //Roda o método para limpar o item selecionado na navbar
+                mainActivity.cleanSelected(getActivity());
             }
         });
 
 
+        finalizarCompra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Produto p = new Produto();
+                for (int i = (itens.size() - 1); i >=0;i--) {
+                    p.id = itens.get(i).getProdId();
+                    if(lerQntd.getInt("Produto"+p.id, 0) == 0)
+                    {
+                        p.qntd = Integer.parseInt(itens.get(i).getQuantidade());
 
-        gravarCart.commit();
+                    }
+                    else
+                    {
+                        p.qntd = lerQntd.getInt("Produto"+p.id,0);
+                        p.qntd += Integer.parseInt(itens.get(i).getQuantidade());
+                    }
+                    gravarQntd.putInt("Produto"+p.id, p.qntd);
+                    gravarQntd.apply();
+                    if(itens.get(i).getTxtTamanho() == null) {
+                        gravarCart.remove("Produto" + p.id);
+                    }
+                    else
+                    {
+                        gravarCart.remove("Produto" + p.id + itens.get(i).getTxtTamanho());
+                    }
+
+                    itens.remove(i);
+                }
+
+                gravarCart.apply();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new CarrinhoFragment()).commit();
+            }
+        });
+
+
+        gravarCart.apply();
+        gravarQntd.apply();
 
         //Define esta como selecionada na navbar
-        MainActivity main = new MainActivity();
-        main.setSelected(getActivity(),true);
+        MainActivity main = (MainActivity) getActivity();
+        main.setSelected(main, true);
         return view;
 
 
     }
 
+    private void carrinhoVazio() {
+        //Remove todas as coisas da tela, e adiciona a mensagem dizendo que o carrinho está vazio
+        layoutCarrinho.removeAllViews();
+        View messageCarrinho = getLayoutInflater().inflate(R.layout.messagecarrinho, layoutCarrinho, false);
+        layoutCarrinho.addView(messageCarrinho);
+    }
+
     private void addCarrinho(@NonNull List<Produto> p) {
 
         for (Produto prod : p) {
-            itens.add(new RecycleCarrinho(prod.nome, String.valueOf(prod.qntd), String.valueOf(prod.preco), String.valueOf(prod.qntd),
-                    decodeBase64ToBitmap(prod.imagem),prod.id, tamanho != 0? String.valueOf(tamanho): null));
-
+            if(prod.id > 0) {
+                itens.add(new RecycleCarrinho(prod.nome, String.valueOf(prod.qntd), String.valueOf(prod.preco), String.valueOf(prod.qntd),
+                        decodeBase64ToBitmap(prod.imagem), prod.id, prod.tamanho != 0 ? String.valueOf(prod.tamanho) : null));
+            }
         }
-        adapter = new CarrinhoAdapter(getContext(), itens, getParentFragmentManager()); //Define o adapter, e passa os itens
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recycler_carrinho.setAdapter(adapter);
-        recycler_carrinho.setLayoutManager(layoutManager);
-        recycler_carrinho.setItemAnimator(new DefaultItemAnimator());
+        if(itens.size() > 0) {
+            adapter = new CarrinhoAdapter(getContext(), itens, getParentFragmentManager()); //Define o adapter, e passa os itens
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            recycler_carrinho.setAdapter(adapter);
+            recycler_carrinho.setLayoutManager(layoutManager);
+            recycler_carrinho.setItemAnimator(new DefaultItemAnimator());
+        }
+        else
+        {
+            carrinhoVazio();
+        }
 
 
     }

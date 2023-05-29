@@ -2,6 +2,7 @@ package com.example.wearmobile;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,7 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +28,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +51,10 @@ public class ProdutoFragment extends Fragment {
     Button btnComprar, btnTryON; //Botões da tela
     Spinner spinTamanhos; //Spinner com os tamanhos de aneis
     Produto p; //Objeto da classe Produto
-    private ObjectMapper leitor = new ObjectMapper(); //Leitor de JSON do Jackson para ler o retorno do SharedPreferences
+    ObjectMapper leitor = new ObjectMapper(); //Leitor de JSON do Jackson para ler o retorno do SharedPreferences
     List<Produto> imagensRecomendadas = new ArrayList<>();
     int[] tamanhosProds;
+    Boolean isClickableButton = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +64,7 @@ public class ProdutoFragment extends Fragment {
         id = bundle.getInt("ID");
 
         //Limpa a seleção da navbar
-        MainActivity main = new MainActivity();
+        MainActivity main = (MainActivity) getActivity();
         main.cleanSelected(getActivity());
 
         //Atribuindo objetos aos itens na tela
@@ -81,10 +85,12 @@ public class ProdutoFragment extends Fragment {
         leitor.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); //Define que o Jackson não vai falhar se encontrar algo que não conhece
         //Ler os itens do SharedPreferences
         SharedPreferences ler = getContext().getSharedPreferences("Produtos", MODE_PRIVATE); //Cria o leitor
-
+        SharedPreferences lerQntd = view.getContext().getSharedPreferences("ProdutoQntd", Context.MODE_PRIVATE); //Lê todos os produtos do banco
+        int qntd = 0; //Define uma variável quantidade
         try {
             //Define o objeto de Produto, com os valores que retornarem do SharedPreferences, que são dados em formato JSON e convertidos pelo jackson com ObjectMapper
             p = leitor.readValue(ler.getString("Produto" + id, ""), Produto.class);
+            qntd = lerQntd.getInt("Produto" + id, 0); //Pega a quantidade do SharedPreferences
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -93,10 +99,9 @@ public class ProdutoFragment extends Fragment {
         //Definindo os textos com base nos valores pegos pelo SharedPreferences
         txtNome.setText(p.nome);
         txtDesc.setText(p.desc);
-        txtQntdEstoque.append("  " + p.qntd);
+        txtQntdEstoque.append("  " + (p.qntd - qntd));
         txtpreco.append(" " + p.preco);
         imgProduto.setImageBitmap(decodeBase64ToBitmap(p.imagem));
-
 
         //Se tiver o atributo modelo 3d,adiciona o onClick, se não, deixa ele invisivel
         if (p.modelo3d != true) {
@@ -106,7 +111,7 @@ public class ProdutoFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intentTryON = new Intent(getContext(), TryOn.class);
-                    intentTryON.putExtra("ID",id);
+                    intentTryON.putExtra("ID", id);
                     startActivity(intentTryON);
                 }
             });
@@ -119,7 +124,7 @@ public class ProdutoFragment extends Fragment {
                 p.tamanho = tamanhosProds[1]; //Define o tamanho do objeto como o primeiro valor, apenas para saber se é anel ou oculos
 
                 if (tamanhosProds[1] != 0) { //Se o primeiro valor não for 0 (na API, qnd não há nada, define o valor como 0)
-                    List<String> ringSizes = new ArrayList<String>(); //Cria uma lista para os valores
+                    List<String> ringSizes = new ArrayList<>(); //Cria uma lista para os valores
 
                     //Para cada valor encontrado, se não for 0, adiciona ele na lista
                     for (int i : tamanhosProds) {
@@ -143,7 +148,9 @@ public class ProdutoFragment extends Fragment {
                         imgRecomendadoProduto1.setImageBitmap(decodeBase64ToBitmap(imagensRecomendadas.get(1).imagem));
                         imgRecomendadoProduto2.setImageBitmap(decodeBase64ToBitmap(imagensRecomendadas.get(2).imagem));
                         imgRecomendadoProduto3.setImageBitmap(decodeBase64ToBitmap(imagensRecomendadas.get(3).imagem));
+                        isClickableButton = true;
                     }
+
                 });
             }
         });
@@ -183,32 +190,44 @@ public class ProdutoFragment extends Fragment {
         btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Cria um Bundle
-                Bundle bundle = new Bundle();
-                //Passa o ID do produto
-                bundle.putInt("ID", id);
-                //Passa o tamanho do produto, se houver
-                if(spinTamanhos.getVisibility() != View.INVISIBLE){
-                    bundle.putString("tamanho",spinTamanhos.getSelectedItem().toString());
-                }
-                //Passa a quantidade que o usuário selecionou
-                if(!edtQuantidade.getText().toString().isEmpty()) {
-                    bundle.putString("qntd", edtQuantidade.getText().toString());
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "É necessário selecionar uma quantidade", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
 
-                //Redireciona de tela
-                getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder,new CarrinhoFragment()).addToBackStack(null).commit();
+                if (isClickableButton) {
+                    //Cria um Bundle
+                    Bundle bundle = new Bundle();
+                    //Passa o ID do produto
+                    bundle.putInt("ID", id);
+                    //Passa o tamanho do produto, se houver
+                    if (spinTamanhos.getVisibility() != View.INVISIBLE) {
+                        bundle.putString("tamanho", spinTamanhos.getSelectedItem().toString());
+                    }
+                    //Passa a quantidade que o usuário selecionou
+                    if (!edtQuantidade.getText().toString().isEmpty()) {
+                        int qntdComprar = Integer.parseInt(edtQuantidade.getText().toString());
+                        int estoque = Integer.parseInt(txtQntdEstoque.getText().toString().replace("Quantidade em Estoque: ","").trim());
+                        if( qntdComprar > estoque ){
+                            Toast.makeText(main, "Valor maior do que disponivel em estoque", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else {
+                            bundle.putString("qntd", edtQuantidade.getText().toString());
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "É necessário selecionar uma quantidade", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    CarrinhoFragment cart = new CarrinhoFragment();
+                    cart.setArguments(bundle);
+
+                    //Redireciona de tela
+                    getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, cart).addToBackStack(null).commit();
+                }
             }
         });
 
         //Listener do edittext que não permite que seu valor seja maior que a quantidade disponível em estoque
-        edtQuantidade.addTextChangedListener(new TextWatcher(){
+        edtQuantidade.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -236,12 +255,14 @@ public class ProdutoFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 
             }
-        }) ;
+        });
 
 
         return view;
     }
+    /*Inicio dos métodos da classe*/
 
+    //Método de onClick das imagens de produto recomendado
     private void onClickRecomendado(View v, int idRecomend) {
         Bundle bundle = new Bundle();
         bundle.putInt("ID", idRecomend);
@@ -253,10 +274,12 @@ public class ProdutoFragment extends Fragment {
     }
 
 
+    //Interface de Callback para esperar a chamada da requisição na API
     private interface Callback {
         void onSucess();
     }
 
+    //Método que pega os produtos similares aquele da página atual, na API
     private void definirSimilares(Callback callback) {
         RequestQueue requisicao = Volley.newRequestQueue(getContext());
         String url = "https://weartechhost.azurewebsites.net/api/WebService/similaresID"; //Define a URL a ser consultada
@@ -294,11 +317,11 @@ public class ProdutoFragment extends Fragment {
 
 
         requisicao.add(buscaProdutos); //Inicia a requisição com o Request criado
-        Log.i("URL", buscaProdutos.getUrl());
-
 
     }
 
+
+    //Método que pega todos os tamanhos do produto, se ele for um anel
     private void pegarTamanhos(int id, Callback callback) {
         RequestQueue requisicao = Volley.newRequestQueue(getContext());
         String url = "https://weartechhost.azurewebsites.net/api/WebService/aneisTamanho"; //Define a URL a ser consultada
@@ -307,7 +330,7 @@ public class ProdutoFragment extends Fragment {
         JsonArrayRequest buscaProdutos = new JsonArrayRequest(
                 Request.Method.GET, //Define que será um GET
                 url + "?id=" + id, //Define a URL que será chamada para a requisição, passando o id junto
-                null, //Define os valores a serem passados no body da requisição
+                null, //Define os valores a serem passados no body da requisição, no caso, nada
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

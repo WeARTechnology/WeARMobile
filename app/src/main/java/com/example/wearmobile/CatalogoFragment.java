@@ -2,6 +2,7 @@ package com.example.wearmobile;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -43,6 +44,7 @@ public class CatalogoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_catalogo, container, false); //Pega o valor da view
+
 
 
 
@@ -89,10 +91,10 @@ public class CatalogoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Troca da tela atual para a Home
-                getParentFragmentManager().popBackStack();
+                getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
 
                 //Cria um objeto da MainActivity
-                MainActivity mainActivity = new MainActivity();
+                MainActivity mainActivity = (MainActivity) getContext();
                 //Roda o método para limpar o item selecionado na navbar
                 mainActivity.cleanSelected(getActivity());
             }
@@ -128,11 +130,12 @@ public class CatalogoFragment extends Fragment {
 
     //Método que cria o recycler
     private void createRecycler(List<Produto> produtos, @Nullable String categoria) {
+
         if (categoria == null) {
             //Para cada produto existente
             for (int i = 0; i < produtos.size(); i++) {
                 //Adiciona para os itens, os valores do produto
-                itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + produtos.get(i).qntd,
+                itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + (produtos.get(i).qntd - decreaseQuantity(produtos.get(i).id)),
                         "R$: " + produtos.get(i).preco, decodeBase64ToBitmap(produtos.get(i).imagem)));
             }
         } else if (categoria.equals("Sol")) //Se a categoria for Óculos de sol
@@ -146,7 +149,7 @@ public class CatalogoFragment extends Fragment {
             for (int i = 0; i < produtos.size(); i++) {
                 if (produtos.get(i).tipo.equals(categoria)) {
                     //Adiciona para os itens, os valores do produto
-                    itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + produtos.get(i).qntd,
+                    itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + (produtos.get(i).qntd - decreaseQuantity(produtos.get(i).id)),
                             "R$: " + produtos.get(i).preco, decodeBase64ToBitmap(produtos.get(i).imagem)));
                 }
             }
@@ -162,7 +165,7 @@ public class CatalogoFragment extends Fragment {
             for (int i = 0; i < produtos.size(); i++) {
                 if (produtos.get(i).tipo.equals(categoria)) {
                     //Adiciona para os itens, os valores do produto
-                    itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + produtos.get(i).qntd,
+                    itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + (produtos.get(i).qntd - decreaseQuantity(produtos.get(i).id)),
                             "R$: " + produtos.get(i).preco, decodeBase64ToBitmap(produtos.get(i).imagem)));
                 }
             }
@@ -179,7 +182,7 @@ public class CatalogoFragment extends Fragment {
             for (int i = 0; i < produtos.size(); i++) {
                 if (produtos.get(i).tamanho != 0) {
                     //Adiciona para os itens, os valores do produto
-                    itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " + produtos.get(i).qntd,
+                    itens.add(new RecycleCatalogo(produtos.get(i).id, produtos.get(i).nome, "Quantidade: " +(produtos.get(i).qntd - decreaseQuantity(produtos.get(i).id)),
                             "R$: " + produtos.get(i).preco, decodeBase64ToBitmap(produtos.get(i).imagem)));
                 }
             }
@@ -188,7 +191,7 @@ public class CatalogoFragment extends Fragment {
 
 
         //Termina de definir a Recycler, com Layout Manager, adapter, e etc..
-        adapter = new CatalogoAdapter(getContext(), itens, getParentFragmentManager()); //Define o adapter, e passa os itens
+        adapter = new CatalogoAdapter(getContext(), itens, getParentFragmentManager(), (MainActivity) getContext()); //Define o adapter, e passa os itens
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setAdapter(adapter);
         recycler.setLayoutManager(layoutManager);
@@ -202,6 +205,22 @@ public class CatalogoFragment extends Fragment {
         byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
         //Decodifica um objeto Bitmap com base em um array de bytes, que é o array acima
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    public int decreaseQuantity(int id){
+        Produto p = new Produto();
+        //Ler os itens do SharedPreferences
+        SharedPreferences ler = getContext().getSharedPreferences("Produtos", MODE_PRIVATE); //Cria o leitor
+        SharedPreferences lerQntd = getContext().getSharedPreferences("ProdutoQntd", Context.MODE_PRIVATE); //Lê todos os produtos do banco
+        int qntd = 0; //Define uma variável quantidade
+        try {
+            //Define o objeto de Produto, com os valores que retornarem do SharedPreferences, que são dados em formato JSON e convertidos pelo jackson com ObjectMapper
+            p = leitor.readValue(ler.getString("Produto" + id, ""), Produto.class);
+            qntd = lerQntd.getInt("Produto" + id , 0); //Pega a quantidade do SharedPreferences
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return qntd;
     }
 
 

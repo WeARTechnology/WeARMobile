@@ -1,11 +1,10 @@
 package com.example.wearmobile;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -14,15 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CatalogoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-     TextView nome_do_produto;
-     TextView quantidade_do_produto;
-     TextView preco;
-     ImageView imgProduto;
-     int id;
-     FragmentManager fragmentManager;
+    TextView nome_do_produto;
+    TextView quantidade_do_produto;
+    TextView preco;
+    ImageView imgProduto;
+    int id;
+    FragmentManager fragmentManager;
+    MainActivity mainActivity;
 
-    public CatalogoViewHolder(@NonNull View itemView, FragmentManager fragmentManager) {
+    public CatalogoViewHolder(@NonNull View itemView, FragmentManager fragmentManager, MainActivity mainActivity) {
         super(itemView);
+        this.mainActivity = mainActivity;
         id = itemView.getId();
         nome_do_produto = itemView.findViewById(R.id.nome_do_produto);
         quantidade_do_produto = itemView.findViewById(R.id.quantidadeProduto);
@@ -41,6 +42,12 @@ public class CatalogoViewHolder extends RecyclerView.ViewHolder implements View.
         produto.setArguments(bundle);
 
         fragmentManager.beginTransaction().replace(R.id.fragmentHolder, produto).addToBackStack(null).commit();
+
+        // Hide the RecyclerView and show the FrameLayout
+        RecyclerView recycler = mainActivity.findViewById(R.id.recyclerViewSearch);
+        recycler.setVisibility(View.INVISIBLE);
+        FrameLayout frameLayout = mainActivity.findViewById(R.id.fragmentHolder);
+        frameLayout.setVisibility(View.VISIBLE);
 
     }
 }

@@ -16,11 +16,13 @@ public class CatalogoAdapter extends RecyclerView.Adapter<CatalogoViewHolder> {
     private Context context;
     private ArrayList<RecycleCatalogo> itens;
     private FragmentManager fragmentManager;
+    MainActivity mainActivity;
 
-    public CatalogoAdapter(Context context, ArrayList<RecycleCatalogo> itens, FragmentManager fragmentManager) {
+    public CatalogoAdapter(Context context, ArrayList<RecycleCatalogo> itens, FragmentManager fragmentManager, MainActivity mainActivity) {
         this.context = context;
         this.itens = itens;
         this.fragmentManager = fragmentManager;
+        this.mainActivity = mainActivity;
     }
 
     @NonNull
@@ -28,7 +30,7 @@ public class CatalogoAdapter extends RecyclerView.Adapter<CatalogoViewHolder> {
     public CatalogoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycle_catalogo, parent, false);
 
-        CatalogoViewHolder viewHolder = new CatalogoViewHolder(view,fragmentManager);
+        CatalogoViewHolder viewHolder = new CatalogoViewHolder(view,fragmentManager,mainActivity);
         return viewHolder;
     }
 

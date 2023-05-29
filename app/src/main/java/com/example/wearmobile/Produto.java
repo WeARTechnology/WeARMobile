@@ -1,6 +1,25 @@
 package com.example.wearmobile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 public class Produto {
     //Definição de atributos da classe
@@ -41,4 +60,5 @@ public class Produto {
         this.qntd = qntd;
         this.imagem = imagem;
     }
+
 }

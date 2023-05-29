@@ -1,5 +1,6 @@
 package com.example.wearmobile;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CarrinhoViewHolder extends RecyclerView.ViewHolder{
@@ -15,6 +17,7 @@ public class CarrinhoViewHolder extends RecyclerView.ViewHolder{
     EditText edtQntd;
     Button btnRemover;
     ImageView ivProduto;
+    FragmentManager fragmentManager;
 
     public CarrinhoViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -25,6 +28,7 @@ public class CarrinhoViewHolder extends RecyclerView.ViewHolder{
         btnRemover = itemView.findViewById(R.id.btnRemoverProduto);
         ivProduto = itemView.findViewById(R.id.ivImagemProdCarrinho);
         txtTamanho = itemView.findViewById(R.id.txtTamanho);
+
     }
 
 }

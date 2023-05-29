@@ -11,7 +11,9 @@
         android:required="true" />
 
     <!--Para permitir o uso da API do WebService-->
-    <uses-permission android:name="android.permission.INTERNET" android:required="true"></uses-permission>
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +25,7 @@
         android:roundIcon="@mipmap/logoandroid"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeARMobile"
-        tools:targetApi="31">
+        tools:targetApi="tiramisu">
         <activity
             android:name=".HandLandmarksOverlayView"
             android:exported="true">

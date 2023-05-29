@@ -5,16 +5,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,19 +46,23 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView navbar; //Objecto da navbar
     FloatingActionButton tryONButton; //Botão central que leva ao TRYON
-    private List<Produto> produtos = new ArrayList<>(); //Produtos que serão colocados no catálogo
-    private ObjectMapper leitor = new ObjectMapper(); //Leitor de JSON do Jackson para ler o retorno do banco
+    List<Produto> produtos = new ArrayList<>(); //Produtos que serão colocados no catálogo
+    ObjectMapper leitor = new ObjectMapper(); //Leitor de JSON do Jackson para ler o retorno do banco
     Gson gson = new Gson(); //Objeto de GSON pra transformar a lista de produtos em JSON mais pra frente
+    Boolean needtoLoading = true;
+    List<Produto> items = new ArrayList<>();
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Logo ao iniciar, define o fragmentHolder, como a HomeFragment, assim haverá informações na tela, que são as do fragment Home
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
 
+        //Cria um leitor do SharedPreferences
+        SharedPreferences ler = getSharedPreferences("Produtos", MODE_PRIVATE);
 
+        //Instanciando botões
         tryONButton = findViewById(R.id.floatingActionButton2); //Instancia o botão
         navbar = findViewById(R.id.bottomNavigationView); //Instancia a navbar
         cleanSelected(this); //Limpa o selecionado da navbar
@@ -60,8 +71,35 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://weartechhost.azurewebsites.net/api/WebService/produtos"; //Define a URL a ser consultada
         RequestQueue requisicao = Volley.newRequestQueue(this); //Cria o objeto de requisição
 
+        //Se o leitor do SharedPreferences tiver vazio
+        if (ler.getAll().isEmpty()) {
+            //Troca o que haveria na tela, por uma mensagem de carregamento
+            ViewGroup layoutManager = findViewById(R.id.fragmentHolder);
+            View messageCarregando = getLayoutInflater().inflate(R.layout.messagecarregando, layoutManager, false);
+            layoutManager.addView(messageCarregando);
+        } else {
+            //Termina de carregar a tela
+            finishScreenLoading();
+            needtoLoading = false;
+        }
+
         //Faz a requisição ao banco, através do método, e salva os valores no SharedPreferences
-        pegarProdutos(url, requisicao);
+        pegarProdutos(url, requisicao, new Callback() {
+            @Override
+            public void onSucess() {
+                //Termina de carregar a tela
+                if (needtoLoading) {
+                    finishScreenLoading();
+                }
+            }
+        });
+
+
+    }
+
+    private void finishScreenLoading() {
+        //Logo ao iniciar, define o fragmentHolder, como a HomeFragment, assim haverá informações na tela, que são as do fragment Home
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).addToBackStack(null).commit();
 
 
         //Adiciona on OnClick do botão de TryON
@@ -92,12 +130,20 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             }
+
+
         });
+
+        //Pega os valores para serem usados na SearchView
+        getItemsName();
     }
 
+    private interface Callback {
+        void onSucess();
+    }
 
     //Método que pega os produtos do banco de dados, todos seus valores são nao nulos
-    private void pegarProdutos(@NonNull String url, @NonNull RequestQueue requisicao) {
+    private void pegarProdutos(@NonNull String url, @NonNull RequestQueue requisicao, Callback callback) {
         //Cria o request para buscar produtos
         JsonArrayRequest buscaProdutos = new JsonArrayRequest(
                 Request.Method.GET, //Define que será um GET
@@ -124,12 +170,13 @@ public class MainActivity extends AppCompatActivity {
                         gravar.putString("Produtos", gson.toJson(produtos));
 
                         //Para cada produto que existe em produtos
-                        for (Produto p: produtos){
+                        for (Produto p : produtos) {
                             //Define o SharedPreferences ProdutoX onde X é o id do produto, com os dados do produto desejado
                             gravar.putString("Produto" + p.id, gson.toJson(p));
                         }
 
-                        gravar.commit();
+                        gravar.apply();
+                        callback.onSucess();
                     }
                 },
                 new Response.ErrorListener() {
@@ -151,10 +198,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Método que "limpa" a seleção da navbar
+    public void cleanSelected(Activity tela) {
+        //Instancia o objeto da navbar
+        navbar = tela.findViewById(R.id.bottomNavigationView);
+        //Define o item selecionado como o de camera (item vazio que não está na tela)
+        navbar.setSelectedItemId(R.id.camera);
+    }
+
+    //Método que define a seleção do navbar
+    public void setSelected(Activity tela, boolean cart) {
+        navbar = tela.findViewById(R.id.bottomNavigationView);
+        int targetId = cart ? R.id.carrinho : R.id.produtos;
+
+        if (navbar.getSelectedItemId() != targetId) {
+            navbar.setSelectedItemId(targetId);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflar o menu do aplicativo a partir do recurso XML (menu_search) no objeto 'menu'
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
@@ -174,8 +237,32 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // Neste exemplo, não estamos realizando nenhuma ação ao alterar o texto
+                //Quando o texto é modificado, filtra os produtos com base no texto escrito
+                List<Produto> filteredProducts = filterItems(newText);
+
+                //Atualiza o recycler com os produtos que vieram filtrados
+                updateProductList(filteredProducts);
                 return false;
+            }
+
+        });
+
+        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                //Apaga o que estava escrito no searchView
+                searchView.setQuery("", false);
+                //Deixa o recycler invisivel e volta a visibilidade da tela (FrameLayout)
+                RecyclerView recycler = findViewById(R.id.recyclerViewSearch);
+                recycler.setVisibility(View.INVISIBLE);
+                FrameLayout frameLayout = findViewById(R.id.fragmentHolder);
+                frameLayout.setVisibility(View.VISIBLE);
+                return true;
             }
         });
 
@@ -184,21 +271,53 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void updateProductList(List<Produto> filteredProducts) {
+        RecyclerView recycler = findViewById(R.id.recyclerViewSearch); //Recycler da tela que mostra o catálogo
+        CatalogoAdapter adapter; //Adapter do catálogo
+        ArrayList<RecycleCatalogo> itens = new ArrayList<>(); //Itens do catálogo
 
-    //Método que "limpa" a seleção da navbar
-    public void cleanSelected(Activity tela) {
-        //Instancia o objeto da navbar
-        navbar = tela.findViewById(R.id.bottomNavigationView);
-        //Define o item selecionado como o de camera (item vazio que não está na tela)
-        navbar.setSelectedItemId(R.id.camera);
+        //For each filtered product
+        for (Produto product : filteredProducts) {
+            //Add the product values to the items
+            itens.add(new RecycleCatalogo(product.id, product.nome, "Quantidade: " + product.qntd,
+                    "R$: " + product.preco, decodeBase64ToBitmap(product.imagem)));
+        }
+
+        //Termina de definir a Recycler, com Layout Manager, adapter, e etc..
+        adapter = new CatalogoAdapter(this, itens, getSupportFragmentManager(), this); //Define o adapter, e passa os itens
+        recycler.setAdapter(adapter);
+        recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recycler.setItemAnimator(new DefaultItemAnimator());
+
+        recycler.setVisibility(View.VISIBLE);
+        FrameLayout frameLayout = findViewById(R.id.fragmentHolder);
+        frameLayout.setVisibility(View.INVISIBLE);
+
+
     }
-    //Método que define a seleção do navbar
-    public void setSelected(Activity tela, boolean cart) {
-        navbar = tela.findViewById(R.id.bottomNavigationView);
-        int targetId = cart ? R.id.carrinho : R.id.produtos;
 
-        if (navbar.getSelectedItemId() != targetId) {
-            navbar.setSelectedItemId(targetId);
+
+    private List<Produto> filterItems(String searchText) {
+        List<Produto> filteredItems = new ArrayList<>();
+
+        for (Produto item : items) {
+            if (item.nome.toLowerCase().contains(searchText.toLowerCase())) {
+                filteredItems.add(item);
+            }
+        }
+
+        return filteredItems;
+    }
+
+
+    private void getItemsName() {
+        SharedPreferences ler = getSharedPreferences("Produtos", MODE_PRIVATE);
+
+        try {
+            items = leitor.readValue(ler.getString("Produtos", ""), new TypeReference<List<Produto>>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
     }
 
