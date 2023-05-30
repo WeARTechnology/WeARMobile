@@ -20,27 +20,32 @@ import java.util.List;
 public class GlassesLandmarksOverlayView extends View {
 
     //Define os atributos da classe
-    private List<LandmarkProto.NormalizedLandmark> landmarks; //Lista com os valores retornados do mediapipe, com cordenadas dos locais da mão
+    private List<LandmarkProto.NormalizedLandmark> landmarks; //Lista com os valores retornados
+    // do mediapipe, com cordenadas dos locais da mão
     private int imageWidth, imageHeight; //Altura e largura da imagem
     private Paint linePaint;
 
-    //Getters e Setters, para permitir manipulação dos valores da altura e largura, considerando que são privados
+    //Getters e Setters, para permitir manipulação dos valores da altura e largura, considerando
+    // que são privados
     public int getImageWidth() {
         return imageWidth;
     }
+
     public int getImageHeight() {
         return imageHeight;
     }
+
     public void setImageWidth(int imageWidth) {
         this.imageWidth = imageWidth;
     }
+
     public void setImageHeight(int imageHeight) {
         this.imageHeight = imageHeight;
     }
 
     //Construtor, que pega o contexto, e os atributos da tela em que foi chamado
     public GlassesLandmarksOverlayView(Context context, AttributeSet attrs) {
-        super(context,attrs);
+        super(context, attrs);
     }
 
 
@@ -51,14 +56,16 @@ public class GlassesLandmarksOverlayView extends View {
     }
 
 
-
-
     private PointF landmarkToScreenCoordinate(LandmarkProto.NormalizedLandmark landmark) {
-        float x = landmark.getX() * imageWidth;
-        float y = landmark.getY() * imageHeight;
+        float y;
+        float x;
+        x = landmark.getY() * imageWidth ;
+        y = (1 - landmark.getX()) * imageHeight;
+        x = imageWidth - x;
+
+
         return new PointF(x, y);
     }
-
 
 
     //Método onDraw, que vai desenhar os landarmarks todo mudar para 3D
@@ -80,7 +87,8 @@ public class GlassesLandmarksOverlayView extends View {
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
         }
 
-        // Repeat the above loop for other face mesh connections like FACEMESH_LEFT_EYE, FACEMESH_RIGHT_EYE, etc.
+        // Repeat the above loop for other face mesh connections like FACEMESH_LEFT_EYE,
+        // FACEMESH_RIGHT_EYE, etc.
         for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_LEFT_EYE) {
             PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
             PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
@@ -97,12 +105,14 @@ public class GlassesLandmarksOverlayView extends View {
             PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
         }
-        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_LEFT_EYEBROW) {
+        for (FaceMeshConnections.Connection connection :
+                FaceMeshConnections.FACEMESH_LEFT_EYEBROW) {
             PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
             PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
         }
-        for (FaceMeshConnections.Connection connection : FaceMeshConnections.FACEMESH_RIGHT_EYEBROW) {
+        for (FaceMeshConnections.Connection connection :
+                FaceMeshConnections.FACEMESH_RIGHT_EYEBROW) {
             PointF start = landmarkToScreenCoordinate(landmarks.get(connection.start()));
             PointF end = landmarkToScreenCoordinate(landmarks.get(connection.end()));
             canvas.drawLine(start.x, start.y, end.x, end.y, linePaint);
