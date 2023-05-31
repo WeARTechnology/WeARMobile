@@ -140,10 +140,7 @@ public class CatalogoFragment extends Fragment {
             }
         } else if (categoria.equals("Sol")) //Se a categoria for Óculos de sol
         {
-            //Remove todos os valores que já existiam em itens
-            for (int j = itens.size() - 1; j >= 0; j--) {
-                itens.remove(j);
-            }
+            removeProducts();
 
             //Para cada produto existente,se o tipo dele for igual ao da categoria, adiciona aos itens
             for (int i = 0; i < produtos.size(); i++) {
@@ -157,9 +154,8 @@ public class CatalogoFragment extends Fragment {
         } else if (categoria.equals("Grau")) { //Se a categoria for Óculos de Grau
 
             //Remove todos os valores que já existiam em itens
-            for (int j = itens.size() - 1; j >= 0; j--) {
-                itens.remove(j);
-            }
+            removeProducts();
+
 
             //Para cada produto existente,se o tipo dele for igual ao da categoria, adiciona aos itens
             for (int i = 0; i < produtos.size(); i++) {
@@ -174,9 +170,8 @@ public class CatalogoFragment extends Fragment {
         } else if (categoria.equals("Anel")) { //Se for um anel
 
             //Remove todos os valores já existentes em itens
-            for (int j = itens.size() - 1; j >= 0; j--) {
-                itens.remove(j);
-            }
+            removeProducts();
+
 
             //Para cada produto, se o tamanho dele não for 0 (é um anel) adiciona a itens
             for (int i = 0; i < produtos.size(); i++) {
@@ -197,6 +192,13 @@ public class CatalogoFragment extends Fragment {
         recycler.setLayoutManager(layoutManager);
         recycler.setItemAnimator(new DefaultItemAnimator());
 
+    }
+
+    private void removeProducts() {
+        //Remove todos os valores que já existiam em itens
+        for (int j = itens.size() - 1; j >= 0; j--) {
+            itens.remove(j);
+        }
     }
 
     //Método que transforma de Base64 para Bitmap

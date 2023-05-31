@@ -322,4 +322,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void backtoHome(){
+        //Troca da tela atual para a Home
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
+        cleanSelected(this);
+    }
+
+
 }

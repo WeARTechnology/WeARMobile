@@ -43,11 +43,14 @@ public class CarrinhoFragment extends Fragment {
     private Gson gson = new Gson(); //Objeto de gson, para codificar e decodificar a classe
     private ObjectMapper leitor = new ObjectMapper(); //Leitor de JSON do Jackson para ler o retorno do SharedPreferences
 
+    private MainActivity mainActivity;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_carrinho, container, false);
+        mainActivity = (MainActivity) getActivity();
         //Pega os dados que vieram através da Fragment
         Bundle dados = getArguments();
         if (dados != null) { //Se não forem nulos, pega ID e QNTD, que vem para o Bundle independente do produto
@@ -213,16 +216,7 @@ public class CarrinhoFragment extends Fragment {
 
 
         //Ao clicar no botão de voltar, ele faz popBackStack na fragment
-        voltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, new HomeFragment()).commit();
-                //Cria um objeto da MainActivity
-                MainActivity mainActivity = (MainActivity) getContext();
-                //Roda o método para limpar o item selecionado na navbar
-                mainActivity.cleanSelected(getActivity());
-            }
-        });
+        voltar.setOnClickListener(view1 -> mainActivity.backtoHome());
 
 
         finalizarCompra.setOnClickListener(new View.OnClickListener() {
@@ -283,7 +277,7 @@ public class CarrinhoFragment extends Fragment {
         for (Produto prod : p) {
             if(prod.id > 0) {
                 itens.add(new RecycleCarrinho(prod.nome, String.valueOf(prod.qntd), String.valueOf(prod.preco), String.valueOf(prod.qntd),
-                        decodeBase64ToBitmap(prod.imagem), prod.id, prod.tamanho != 0 ? String.valueOf(prod.tamanho) : null));
+                        mainActivity.decodeBase64ToBitmap(prod.imagem), prod.id, prod.tamanho != 0 ? String.valueOf(prod.tamanho) : null));
             }
         }
         if(itens.size() > 0) {
@@ -301,11 +295,4 @@ public class CarrinhoFragment extends Fragment {
 
     }
 
-    //Método que transforma de Base64 para Bitmap
-    public Bitmap decodeBase64ToBitmap(String base64Image) {
-        //Pega a imagem em String, decodifica para Base64 e adiciona para um array de bytes
-        byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-        //Decodifica um objeto Bitmap com base em um array de bytes, que é o array acima
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-    }
 }

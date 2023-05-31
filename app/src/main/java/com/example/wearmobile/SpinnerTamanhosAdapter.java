@@ -12,24 +12,24 @@ import java.util.List;
 public class SpinnerTamanhosAdapter extends ArrayAdapter<String> {
 
 
-            public SpinnerTamanhosAdapter(Context context, List<String> ringSizes) {
-            super(context, android.R.layout.simple_spinner_item, ringSizes);
-        }
+    public SpinnerTamanhosAdapter(Context context, List<String> ringSizes) {
+        super(context, android.R.layout.simple_spinner_item, ringSizes);
+    }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            String tamanho = getItem(position);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        String tamanho = getItem(position);
 
-            View view = convertView;
-            view = LayoutInflater.from(getContext()).inflate(R.layout.ring_size_spinner_item, parent, false);
+        View view = convertView;
+        view = LayoutInflater.from(getContext()).inflate(R.layout.ring_size_spinner_item, parent,
+                false);
 
 
-            TextView ringSizeTextView = (TextView) view.findViewById(R.id.ring_size);
-            ringSizeTextView.append(" " + tamanho);
+        TextView ringSizeTextView = (TextView) view.findViewById(R.id.ring_size);
+        ringSizeTextView.append(" " + tamanho);
 
-            return view;
-        }
-
+        return view;
+    }
 
 
 }

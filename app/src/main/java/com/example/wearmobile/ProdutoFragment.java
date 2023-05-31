@@ -155,43 +155,32 @@ public class ProdutoFragment extends Fragment {
             }
         });
 
-        //Adicionando os Clicklisteners dos itens recomendados, que redireciona para uma nova página de produto
-        imgRecomendadoProduto1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+            //Adicionando os Clicklisteners dos itens recomendados, que redireciona para uma nova página de produto
+            imgRecomendadoProduto1.setOnClickListener(v -> {
                 int idRecomendado = imagensRecomendadas.get(1).idSimilar;
                 onClickRecomendado(v, idRecomendado);
-            }
-        });
-        imgRecomendadoProduto2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+            });
+            imgRecomendadoProduto2.setOnClickListener(v -> {
                 int idRecomendado = imagensRecomendadas.get(2).idSimilar;
                 onClickRecomendado(v, idRecomendado);
-            }
-        });
-        imgRecomendadoProduto3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            });
+            imgRecomendadoProduto3.setOnClickListener(v -> {
                 int idRecomendado = imagensRecomendadas.get(3).idSimilar;
                 onClickRecomendado(v, idRecomendado);
-            }
-        });
+            });
+
 
         //Adicionando Listener do botão voltar, que dá popBackStack, voltando pra fragment anterior
-        btnVoltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getParentFragmentManager().popBackStack(); //Volta a fragment anterior
-            }
+        btnVoltar.setOnClickListener(v -> {
+            getParentFragmentManager().popBackStack(); //Volta a fragment anterior
         });
 
         //Adiciona o OnClick de compra , que redireciona ao carrinho
         btnComprar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 if (isClickableButton) {
                     //Cria um Bundle
                     Bundle bundle = new Bundle();
@@ -264,13 +253,15 @@ public class ProdutoFragment extends Fragment {
 
     //Método de onClick das imagens de produto recomendado
     private void onClickRecomendado(View v, int idRecomend) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("ID", idRecomend);
+        if(isClickableButton) {
+            Bundle bundle = new Bundle();
+            bundle.putInt("ID", idRecomend);
 
-        ProdutoFragment produto = new ProdutoFragment();
-        produto.setArguments(bundle);
+            ProdutoFragment produto = new ProdutoFragment();
+            produto.setArguments(bundle);
 
-        getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, produto).addToBackStack(null).commit();
+            getParentFragmentManager().beginTransaction().replace(R.id.fragmentHolder, produto).addToBackStack(null).commit();
+        }
     }
 
 
