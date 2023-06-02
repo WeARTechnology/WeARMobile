@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameTryOn"
     android:layout_width="fill_parent"
@@ -18,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/inverter_camera"
+        android:contentDescription="@string/app_name"
         android:scaleX="0.6"
         android:scaleY="1" />
 
@@ -30,26 +32,30 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
 
                 <ImageView
+                    android:id="@+id/imgModelo3D1"
                     android:layout_width="140dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/gabriel" />
+                    android:src="@drawable/oxcartround" />
 
                 <ImageView
+                    android:id="@+id/imgModelo3D2"
                     android:layout_width="140dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/gabriel" />
+                    android:src="@drawable/cipresteround" />
 
                 <ImageView
+                    android:id="@+id/imgModelo3D3"
                     android:layout_width="140dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/gabriel" />
+                    android:src="@drawable/thepinkpeachtreeround" />
 
 
             </LinearLayout>

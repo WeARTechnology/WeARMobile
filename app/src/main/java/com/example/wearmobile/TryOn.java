@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -64,8 +65,8 @@ public class TryOn extends AppCompatActivity {
                                                                 que possui os pontos recebidos através dos dados da classe hands e desenha o esqueleto da mão*/
     private boolean frontal = true;
     private Button switchCamera;
-    SurfaceView surfaceView;
-    RingRender ringRenderer;
+    private SurfaceView surfaceView;
+    private ImageView modelo1,modelo2,modelo3;
 
 
     @Override
@@ -73,15 +74,21 @@ public class TryOn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_try_on);
 
-        ringRenderer = new RingRender(getApplicationContext());
-
         //Atribuindo objetos aos views da activity
         previewView = findViewById(R.id.preview_view);
         handLandmarksOverlayView = new HandLandmarksOverlayView(getApplicationContext(),null);
-
+        handLandmarksOverlayView.setRotation(90);
 
         glassesLandmarksOverlayView = new GlassesLandmarksOverlayView(getApplicationContext(),null);
         switchCamera = findViewById(R.id.btnVirar);
+
+        //Adicionando botões inferiores da tela, e seus onClicks TODO fazer importarem modelo 3d
+        modelo1 = findViewById(R.id.imgModelo3D1);
+        modelo2 = findViewById(R.id.imgModelo3D2);
+        modelo3 = findViewById(R.id.imgModelo3D3);
+        modelo1.setOnClickListener(v -> Toast.makeText(TryOn.this, "Disponível na próxima atualização", Toast.LENGTH_SHORT).show());
+        modelo2.setOnClickListener(v -> Toast.makeText(TryOn.this, "Disponível na próxima atualização", Toast.LENGTH_SHORT).show());
+        modelo3.setOnClickListener(v -> Toast.makeText(TryOn.this, "Disponível na próxima atualização", Toast.LENGTH_SHORT).show());
 
         //Adicionando o XML da câmera frontal na tela de padrão
         final ViewGroup mainLayout = findViewById(R.id.frameTryOn);
@@ -120,8 +127,6 @@ public class TryOn extends AppCompatActivity {
                 glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
                 glassesLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
 
-                ringRenderer.setScreenHeight(mainLayout.getHeight());
-                ringRenderer.setScreenWidth(mainLayout.getWidth());
 
             }
         });
@@ -151,10 +156,6 @@ public class TryOn extends AppCompatActivity {
                         mainLayout.addView(glassesLandmarksOverlayView);
                     }
 
-                    //surfaceView = new SurfaceView(getApplicationContext());
-                    //ringRenderer = new RingRender(getApplicationContext());
-                    //surfaceView.setSurfaceRenderer(ringRenderer);
-                    //mainLayout.addView(surfaceView);
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = true;
 
@@ -332,15 +333,6 @@ public class TryOn extends AppCompatActivity {
         });
     }
 
-
-    private void updateModelPositions(List<LandmarkProto.NormalizedLandmark> handLandmarks) {
-        // Calculate the position, rotation, and scale based on the detected landmarks
-        Vector3 ringPosition = ringRenderer.calculateRingPosition(handLandmarks);
-        Quaternion ringRotation = ringRenderer.calculateRingRotation(handLandmarks);
-        float ringScale = ringRenderer.calculateRingScale(handLandmarks);
-
-        ringRenderer.updateModelPositions(ringPosition, ringRotation, ringScale);
-    }
 
 
 }
