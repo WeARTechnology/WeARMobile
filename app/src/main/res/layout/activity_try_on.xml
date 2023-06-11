@@ -14,6 +14,11 @@
     </androidx.camera.view.PreviewView>
 
 
+    <org.rajawali3d.view.SurfaceView
+        android:id="@+id/rajawali_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <Button
         android:id="@+id/btnVirar"
         android:layout_width="wrap_content"
@@ -43,19 +48,19 @@
                     android:id="@+id/imgModelo3D1"
                     android:layout_width="140dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/oxcartround" />
+                    android:src="@drawable/deaardappeletersround"/>
 
                 <ImageView
                     android:id="@+id/imgModelo3D2"
                     android:layout_width="140dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/cipresteround" />
+                    android:src="@drawable/cipresteround"/>
 
                 <ImageView
                     android:id="@+id/imgModelo3D3"
                     android:layout_width="140dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/thepinkpeachtreeround" />
+                    android:src="@drawable/maratusconstellatusround"/>
 
 
             </LinearLayout>

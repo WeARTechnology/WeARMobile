@@ -9,10 +9,7 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -41,14 +38,11 @@ import com.google.mediapipe.solutions.hands.Hands;
 import com.google.mediapipe.solutions.hands.HandsOptions;
 import com.google.mediapipe.solutions.hands.HandsResult;
 
-import org.rajawali3d.math.Quaternion;
-import org.rajawali3d.math.vector.Vector3;
+import org.rajawali3d.view.SurfaceView;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-import org.rajawali3d.view.SurfaceView;
 
 
 public class TryOn extends AppCompatActivity {
@@ -57,16 +51,15 @@ public class TryOn extends AppCompatActivity {
     private ProcessCameraProvider cameraProvider; //Objeto que cuida do lifecycle da camera
     private CameraSelector cameraSelector; // Objeto que seleciona qual camera será usada (frontal, traseira, etc..)
     private Preview preview; //Objeto que permite que o preview de o que a camera está capturando seja usado
+
     private FaceMesh facemesh; //Objeto de facemesh do Mediapipe, que acha os pontos em um rosto quando detectado na camera
-    private GlassesLandmarksOverlayView glassesLandmarksOverlayView;/*Objeto da classe interna HandLandmarksOverlayView, que produz um View na activity,
-                                                                que possui os pontos recebidos através dos dados da classe facemesh*/
     private Hands hands; // Objeto da classe hands do mediapipe que recebe a imagem e acha a mão
-    private HandLandmarksOverlayView handLandmarksOverlayView; /*Objeto da classe interna HandLandmarksOverlayView, que produz um View na activity,
-                                                                que possui os pontos recebidos através dos dados da classe hands e desenha o esqueleto da mão*/
+
     private boolean frontal = true;
     private Button switchCamera;
-    private SurfaceView surfaceView;
-    private ImageView modelo1,modelo2,modelo3;
+    private ImageView modelo1, modelo2, modelo3;
+    private SurfaceView rajawaliSurface;
+    private ModelsRenderer modelsRenderer;
 
 
     @Override
@@ -74,28 +67,17 @@ public class TryOn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_try_on);
 
-        //Atribuindo objetos aos views da activity
-        previewView = findViewById(R.id.preview_view);
-        handLandmarksOverlayView = new HandLandmarksOverlayView(getApplicationContext(),null);
-        handLandmarksOverlayView.setRotation(90);
 
-        glassesLandmarksOverlayView = new GlassesLandmarksOverlayView(getApplicationContext(),null);
         switchCamera = findViewById(R.id.btnVirar);
+        previewView = findViewById(R.id.preview_view);
 
-        //Adicionando botões inferiores da tela, e seus onClicks TODO fazer importarem modelo 3d
+        //Adicionando botões inferiores da tela, e seus onClicks
         modelo1 = findViewById(R.id.imgModelo3D1);
         modelo2 = findViewById(R.id.imgModelo3D2);
         modelo3 = findViewById(R.id.imgModelo3D3);
-        modelo1.setOnClickListener(v -> Toast.makeText(TryOn.this, "Disponível na próxima atualização", Toast.LENGTH_SHORT).show());
-        modelo2.setOnClickListener(v -> Toast.makeText(TryOn.this, "Disponível na próxima atualização", Toast.LENGTH_SHORT).show());
-        modelo3.setOnClickListener(v -> Toast.makeText(TryOn.this, "Disponível na próxima atualização", Toast.LENGTH_SHORT).show());
-
-        //Adicionando o XML da câmera frontal na tela de padrão
-        final ViewGroup mainLayout = findViewById(R.id.frameTryOn);
-        mainLayout.addView(glassesLandmarksOverlayView);
-
-
-
+        modelo1.setOnClickListener(v -> initializeModel(1,false,true));
+        modelo2.setOnClickListener(v -> initializeModel(2,false,true));
+        modelo3.setOnClickListener(v -> initializeModel(3,false,true));
 
         //Definindo a classe hands e as suas opções, por exemplo ,usar a GPU
         HandsOptions handsOptions = HandsOptions.builder()
@@ -117,44 +99,28 @@ public class TryOn extends AppCompatActivity {
         //Cria o objeto de facemesh com as opções criadas acima
         facemesh = new FaceMesh(getApplicationContext(), faceMeshOptions);
 
-
-        //Esse método espera a criação/o desenho do mainLayout na tela, para só depois pegar sua altura e sua largura,
-        mainLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() { //Quando ele termina de desenhar, roda a função
-                handLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
-                handLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
-                glassesLandmarksOverlayView.setImageHeight(mainLayout.getHeight());
-                glassesLandmarksOverlayView.setImageWidth(mainLayout.getWidth());
-
-
-            }
-        });
-
         //Listener do clique do botão que troca de câmera
         switchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(frontal){ //Quando o botão for clicado, inverte do frontal para o traseiro, definindo o frontal como true, o que fará que na proxima vez ele vá para o traseiro
-                    if(glassesLandmarksOverlayView.getParent() != null){
-                        mainLayout.removeView(glassesLandmarksOverlayView);
-                    }
-                    if(handLandmarksOverlayView.getParent() == null){
-                        mainLayout.addView(handLandmarksOverlayView);
-
-                    }
+                if (frontal) { //Quando o botão for clicado, inverte do frontal para o traseiro, definindo o frontal como true, o que fará que na proxima vez ele vá para o traseiro
+                    modelo1.setOnClickListener(v -> initializeModel(1,false,false));
+                    modelo2.setOnClickListener(v -> initializeModel(2,false,false));
+                    modelo3.setOnClickListener(v -> initializeModel(3,false,false));
+                    modelo1.setImageResource(R.drawable.girassoisdevangoghround);
+                    modelo2.setImageResource(R.drawable.oxcartround);
+                    modelo3.setImageResource(R.drawable.thepinkpeachtreeround);
 
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = false;
 
-                }else{
-                    if(handLandmarksOverlayView.getParent() != null){
-                        mainLayout.removeView(handLandmarksOverlayView);
-                    }
-
-                    if(glassesLandmarksOverlayView.getParent() == null){
-                        mainLayout.addView(glassesLandmarksOverlayView);
-                    }
+                } else {
+                    modelo1.setOnClickListener(v -> initializeModel(1,false,true));
+                    modelo2.setOnClickListener(v -> initializeModel(2,false,true));
+                    modelo3.setOnClickListener(v -> initializeModel(3,false,true));
+                    modelo1.setImageResource(R.drawable.deaardappeletersround);
+                    modelo2.setImageResource(R.drawable.cipresteround);
+                    modelo3.setImageResource(R.drawable.maratusconstellatusround);
 
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = true;
@@ -164,12 +130,28 @@ public class TryOn extends AppCompatActivity {
         });
 
         //Chamando os outros métodos da clase para rodarem
+        requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
+        initializeModel(0,true,true);
         initializeHands(); //Método que inicializa o desenho da mão
         initializateFace(); //Método que inicializa o desenho do rosto
-        requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
 
 
+    }
 
+    private void initializeModel(int i, boolean isFirst, boolean isGlass) {
+        if(isFirst) {
+            rajawaliSurface = findViewById(R.id.rajawali_surface);
+            rajawaliSurface.setTransparent(true);
+            rajawaliSurface.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+            rajawaliSurface.setZOrderOnTop(true);
+            rajawaliSurface.setElevation(10);
+            modelsRenderer = new ModelsRenderer(this, i);
+            rajawaliSurface.setSurfaceRenderer(modelsRenderer);
+        }
+        else {
+            modelsRenderer.setGlass(isGlass);
+            modelsRenderer.renderModel(i);
+        }
     }
 
     private void requestCameraPermission() {
@@ -272,12 +254,10 @@ public class TryOn extends AppCompatActivity {
                                 imageProxy.close(); //Fecha o método
                                 return;
                             } else { //Caso tudo esteja certo, envia a imagem ao mediapipe
-                                if(frontal) {
+                                if (frontal) {
                                     facemesh.send(bitmap, imageProxy.getImageInfo().getTimestamp()); //Envia a imagem, e seu Timestamp
-                                }
-                                else
-                                {
-                                    hands.send(bitmap,imageProxy.getImageInfo().getTimestamp());
+                                } else {
+                                    hands.send(bitmap, imageProxy.getImageInfo().getTimestamp());
                                 }
                             }
                             imageProxy.close(); //Ao fim da função, fecha o ImageProxy que é dado pelo Analyze
@@ -300,15 +280,14 @@ public class TryOn extends AppCompatActivity {
         facemesh.setResultListener(new ResultListener<FaceMeshResult>() {
             @Override
             public void run(FaceMeshResult result) {
-
-                if(result.multiFaceLandmarks() != null){ //Se houver algum landmark de rosto
-                    for(LandmarkProto.NormalizedLandmarkList landmarks : result.multiFaceLandmarks()){
-                        glassesLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList());
-                        //todo MUDAR PARA 3D
+                if (result.multiFaceLandmarks() != null) {
+                    for (LandmarkProto.NormalizedLandmarkList landmarks : result.multiFaceLandmarks()) {
+                        modelsRenderer.updateGlassesPosition(landmarks.getLandmarkList());
                     }
                 }
             }
         });
+
 
     }
 
@@ -323,8 +302,7 @@ public class TryOn extends AppCompatActivity {
 
                 if (result.multiHandLandmarks() != null) { //Se houver a detecção de alguma mão, ou seja, for diferente de null
                     for (LandmarkProto.NormalizedLandmarkList landmarks : result.multiHandLandmarks()) { //Para cada landmark dentro do resultado
-                        handLandmarksOverlayView.setLandmarks(landmarks.getLandmarkList()); //Chama o método da classe HandLandmarksOverlayView, que desenha os landmarks na tela
-                        //todo mudar para 3D
+                        modelsRenderer.updateRingPosition(landmarks.getLandmarkList());
                     }
                 }
 
@@ -332,7 +310,6 @@ public class TryOn extends AppCompatActivity {
             }
         });
     }
-
 
 
 }
