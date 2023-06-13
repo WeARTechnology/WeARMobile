@@ -12,7 +12,6 @@ import org.rajawali3d.loader.ParsingException;
 import org.rajawali3d.materials.Material;
 import org.rajawali3d.materials.methods.DiffuseMethod;
 import org.rajawali3d.materials.methods.SpecularMethod;
-import org.rajawali3d.materials.textures.Texture;
 import org.rajawali3d.math.vector.Vector3;
 import org.rajawali3d.renderer.Renderer;
 
@@ -21,15 +20,16 @@ import java.util.List;
 public class ModelsRenderer extends Renderer {
 
     //Objetos do modelo 3d e o inteiro que define o modelo
-    Object3D glasses = null;
-    int model = 0;
-    float scaleFactorModel = 0;
+    Object3D model = null;
+    int modelId = 0;
+    float scaleFactorModel = 0 , xOffSet = 0, yOffset = 0;
     boolean isGlass = true;
+    float rotationDegrees;
 
     //Construtor que pega o contexto e o modelo que deve ser renderizado
     public ModelsRenderer(Context context, int model) {
         super(context);
-        this.model = model;
+        this.modelId = model;
     }
 
     public boolean isGlass() {
@@ -42,7 +42,7 @@ public class ModelsRenderer extends Renderer {
 
     @Override
     protected void initScene() {
-        renderModel(model);
+        renderModel(modelId);
     }
 
     public void renderModel(int model) {
@@ -51,40 +51,49 @@ public class ModelsRenderer extends Renderer {
         getCurrentCamera().setLookAt(0, 0, 0);
         if(isGlass) {
             switch (model) {
-                case 1:
+                case 7:
                 case 0:
-                    glasses = loadModel(R.raw.deaardappeleters);
+                    this.model = loadModel(R.raw.deaardappeleters);
                     scaleFactorModel = 0.9f;
+                    yOffset = 0.8f;
+                    xOffSet = 0.35f;
                     break;
-                case 2:
-                    glasses = loadModel(R.raw.cipreste);
+                case 5:
+                    this.model = loadModel(R.raw.cipreste);
                     scaleFactorModel = 4f;
+                    xOffSet = -2.8f;
+                    yOffset =  0.9f;
                     break;
-                case 3:
-                    glasses = loadModel(R.raw.maratusconstelatus);
+                case 6:
+                    this.model = loadModel(R.raw.maratusconstelatus);
                     scaleFactorModel = 7.5f;
+                    yOffset = 2.65f;
+                    xOffSet = 0.3f;
                     break;
             }
         }
         else
         {
             switch (model) {
-                case 1:
+                case 12:
                 case 0:
-                    glasses = loadModel(R.raw.girassoisdevangogh);
+                    this.model = loadModel(R.raw.girassoisdevangogh);
                     scaleFactorModel = 0.5f;
+                    rotationDegrees = 0;
                     break;
-                case 2:
-                    glasses = loadModel(R.raw.oxcart);
-                    scaleFactorModel = 0.2f;
+                case 13:
+                    this.model = loadModel(R.raw.oxcart);
+                    scaleFactorModel = 0.09f;
+                    rotationDegrees = -110;
                     break;
-                case 3:
-                    glasses = loadModel(R.raw.thepinkpeachtree);
-                    scaleFactorModel = 4f;
+                case 14:
+                    this.model = loadModel(R.raw.thepinkpeachtree);
+                    scaleFactorModel = 2f;
+                    rotationDegrees = -90;
                     break;
             }
         }
-        getCurrentScene().addChild(glasses);
+        getCurrentScene().addChild(this.model);
     }
 
 
@@ -128,14 +137,14 @@ public class ModelsRenderer extends Renderer {
     //Método que atualiza as posições do óculos com base nos landmarks
     public void updateGlassesPosition(List<LandmarkProto.NormalizedLandmark> landmarks) {
         //Se houverem landmarks, e um óculos
-        if(landmarks!= null && glasses != null) {
+        if(landmarks!= null && model != null) {
             Vector3 position = calculatePositionGlass(landmarks);
             Vector3 scale = calculateScaleGlass(landmarks);
             Vector3 rotation = calculateRotationGlass(landmarks);
 
-            glasses.setPosition(position);
-            glasses.setScale(scale);
-            glasses.setRotation(rotation);
+            model.setPosition(position);
+            model.setScale(scale);
+            model.setRotation(rotation);
         }
 
 
@@ -143,14 +152,14 @@ public class ModelsRenderer extends Renderer {
 
     public void updateRingPosition(List<LandmarkProto.NormalizedLandmark> landmarks) {
         //Se houverem landmarks, e um óculos
-        if(landmarks!= null && glasses != null) {
+        if(landmarks!= null && model != null) {
             Vector3 position = calculatePositionRing(landmarks);
             Vector3 scale = calculateScaleRing(landmarks);
             Vector3 rotation = calculateRotationRing(landmarks);
 
-            glasses.setPosition(position);
-            glasses.setScale(scale);
-            glasses.setRotation(rotation);
+            model.setPosition(position);
+            model.setScale(scale);
+            model.setRotation(rotation);
         }
 
 
@@ -167,7 +176,7 @@ public class ModelsRenderer extends Renderer {
         float y = (leftEye.getY() + rightEye.getY()) / 2;
         float z = (leftEye.getZ() + rightEye.getZ()) / 2;
 
-        return new Vector3(x, y, z);
+        return new Vector3(x - xOffSet, y - yOffset, z);
     }
 
 
@@ -248,8 +257,10 @@ public class ModelsRenderer extends Renderer {
         float pitch = (float) Math.atan2(ringBase.getY() - ringTip.getY(), ringBase.getX() - ringTip.getX());
         float yaw = (float) Math.atan2(ringBase.getZ() - ringTip.getZ(), ringBase.getX() - ringTip.getX());
 
-        return new Vector3(pitch, yaw, 0);
+
+        return new Vector3(pitch, yaw, rotationDegrees);
     }
+
 
 
 

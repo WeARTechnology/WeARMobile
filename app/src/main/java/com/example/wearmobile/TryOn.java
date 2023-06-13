@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -60,12 +61,18 @@ public class TryOn extends AppCompatActivity {
     private ImageView modelo1, modelo2, modelo3;
     private SurfaceView rajawaliSurface;
     private ModelsRenderer modelsRenderer;
+    private int id = 7;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_try_on);
+        Intent intent = getIntent();
+        if(intent.getExtras() != null) {
+            frontal = intent.getExtras().getBoolean("Glass", true);
+            id = intent.getExtras().getInt("ID");
+        }
 
 
         switchCamera = findViewById(R.id.btnVirar);
@@ -75,9 +82,8 @@ public class TryOn extends AppCompatActivity {
         modelo1 = findViewById(R.id.imgModelo3D1);
         modelo2 = findViewById(R.id.imgModelo3D2);
         modelo3 = findViewById(R.id.imgModelo3D3);
-        modelo1.setOnClickListener(v -> initializeModel(1,false,true));
-        modelo2.setOnClickListener(v -> initializeModel(2,false,true));
-        modelo3.setOnClickListener(v -> initializeModel(3,false,true));
+        defineBottomScroll(frontal);
+
 
         //Definindo a classe hands e as suas opções, por exemplo ,usar a GPU
         HandsOptions handsOptions = HandsOptions.builder()
@@ -104,38 +110,47 @@ public class TryOn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (frontal) { //Quando o botão for clicado, inverte do frontal para o traseiro, definindo o frontal como true, o que fará que na proxima vez ele vá para o traseiro
-                    modelo1.setOnClickListener(v -> initializeModel(1,false,false));
-                    modelo2.setOnClickListener(v -> initializeModel(2,false,false));
-                    modelo3.setOnClickListener(v -> initializeModel(3,false,false));
-                    modelo1.setImageResource(R.drawable.girassoisdevangoghround);
-                    modelo2.setImageResource(R.drawable.oxcartround);
-                    modelo3.setImageResource(R.drawable.thepinkpeachtreeround);
-
+                    initializeModel(12,false,false);
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = false;
+                    defineBottomScroll(false);
 
                 } else {
-                    modelo1.setOnClickListener(v -> initializeModel(1,false,true));
-                    modelo2.setOnClickListener(v -> initializeModel(2,false,true));
-                    modelo3.setOnClickListener(v -> initializeModel(3,false,true));
-                    modelo1.setImageResource(R.drawable.deaardappeletersround);
-                    modelo2.setImageResource(R.drawable.cipresteround);
-                    modelo3.setImageResource(R.drawable.maratusconstellatusround);
-
+                    initializeModel(7,false,true);
                     requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
                     frontal = true;
-
+                    defineBottomScroll(true);
                 }
             }
         });
 
         //Chamando os outros métodos da clase para rodarem
         requestCameraPermission(); //Método que pede a permissão de câmera caso ela não exista
-        initializeModel(0,true,true);
+        initializeModel(id,true,frontal);
         initializeHands(); //Método que inicializa o desenho da mão
         initializateFace(); //Método que inicializa o desenho do rosto
 
 
+    }
+
+    //Método que define quais imagens estarão no scroll view dos outros modelos, e, define qual modelo renderização ao serem clicados
+    private void defineBottomScroll(boolean frontal){
+        if (frontal) {
+            modelo1.setOnClickListener(v -> initializeModel(7, false, true));
+            modelo2.setOnClickListener(v -> initializeModel(5, false, true));
+            modelo3.setOnClickListener(v -> initializeModel(6, false, true));
+            modelo1.setImageResource(R.drawable.deaardappeletersround);
+            modelo2.setImageResource(R.drawable.cipresteround);
+            modelo3.setImageResource(R.drawable.maratusconstellatusround);
+        } else {
+            modelo1.setOnClickListener(v -> initializeModel(12,false,false));
+            modelo2.setOnClickListener(v -> initializeModel(13,false,false));
+            modelo3.setOnClickListener(v -> initializeModel(14,false,false));
+            modelo1.setImageResource(R.drawable.girassoisdevangoghround);
+            modelo2.setImageResource(R.drawable.oxcartround);
+            modelo3.setImageResource(R.drawable.thepinkpeachtreeround);
+
+        }
     }
 
     private void initializeModel(int i, boolean isFirst, boolean isGlass) {
@@ -146,6 +161,7 @@ public class TryOn extends AppCompatActivity {
             rajawaliSurface.setZOrderOnTop(true);
             rajawaliSurface.setElevation(10);
             modelsRenderer = new ModelsRenderer(this, i);
+            modelsRenderer.setGlass(isGlass);
             rajawaliSurface.setSurfaceRenderer(modelsRenderer);
         }
         else {

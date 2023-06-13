@@ -55,6 +55,7 @@ public class ProdutoFragment extends Fragment {
     List<Produto> imagensRecomendadas = new ArrayList<>();
     int[] tamanhosProds;
     Boolean isClickableButton = false;
+    Boolean isglass = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +113,7 @@ public class ProdutoFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intentTryON = new Intent(getContext(), TryOn.class);
                     intentTryON.putExtra("ID", id);
+                    intentTryON.putExtra("Glass",isglass);
                     startActivity(intentTryON);
                 }
             });
@@ -137,8 +139,10 @@ public class ProdutoFragment extends Fragment {
                     SpinnerTamanhosAdapter ringSizeAdapter = new SpinnerTamanhosAdapter(getContext(), ringSizes);
                     spinTamanhos.setAdapter(ringSizeAdapter);
                 } else {
+                    isglass = true;
                     //Se não tiver nada, é um oculos, então some com o objeto
                     spinTamanhos.setVisibility(View.INVISIBLE);
+
                 }
 
                 //Define os produtos similares que ficarão abaixo da tela, apenas se conseguir pegar o tamanho
