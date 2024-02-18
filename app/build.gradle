@@ -38,6 +38,10 @@ android {
 
     ndkVersion '25.2.9519653'
     buildToolsVersion '33.0.2'
+    dependenciesInfo {
+        includeInApk true
+        includeInBundle true
+    }
 }
 
 dependencies {

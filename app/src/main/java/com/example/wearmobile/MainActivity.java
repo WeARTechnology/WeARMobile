@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         cleanSelected(this); //Limpa o selecionado da navbar
 
         //Definição de itens para requisição
-        String url = "https://weartechhost.azurewebsites.net/api/WebService/produtos"; //Define a URL a ser consultada
+        String url = "https://weartech.netlify.app/api/WebService/produtos"; //Define a URL a ser consultada
         RequestQueue requisicao = Volley.newRequestQueue(this); //Cria o objeto de requisição
 
         //Se o leitor do SharedPreferences tiver vazio
