@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         cleanSelected(this); //Limpa o selecionado da navbar
 
         //Definição de itens para requisição
-        String url = "http://weartech.somee.com/api/WebService/produtos"; //Define a URL a ser consultada
+        String url = "https://weartech.somee.com/api/WebService/produtos"; //Define a URL a ser consultada
         RequestQueue requisicao = Volley.newRequestQueue(this); //Cria o objeto de requisição
 
         //Se o leitor do SharedPreferences tiver vazio
@@ -186,6 +187,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+        buscaProdutos.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 30000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 30000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requisicao.add(buscaProdutos); //Inicia a requisição com o Request criado
     }
 
