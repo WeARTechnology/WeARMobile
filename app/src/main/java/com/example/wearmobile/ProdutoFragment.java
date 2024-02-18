@@ -277,7 +277,7 @@ public class ProdutoFragment extends Fragment {
     //Método que pega os produtos similares aquele da página atual, na API
     private void definirSimilares(Callback callback) {
         RequestQueue requisicao = Volley.newRequestQueue(getContext());
-        String url = "https://weartech.netlify.app/api/WebService/similaresID"; //Define a URL a ser consultada
+        String url = "http://weartech.somee.com/api/WebService/similaresID"; //Define a URL a ser consultada
 
         String tabela = p.tamanho == 0 ? "Oculos" : "Anel";
         ; //Descobre qual tabela deve ser chamada
@@ -319,7 +319,7 @@ public class ProdutoFragment extends Fragment {
     //Método que pega todos os tamanhos do produto, se ele for um anel
     private void pegarTamanhos(int id, Callback callback) {
         RequestQueue requisicao = Volley.newRequestQueue(getContext());
-        String url = "https://weartech.netlify.app/api/WebService/aneisTamanho"; //Define a URL a ser consultada
+        String url = "http://weartech.somee.com/api/WebService/aneisTamanho"; //Define a URL a ser consultada
 
         //Cria o request para buscar produtos
         JsonArrayRequest buscaProdutos = new JsonArrayRequest(

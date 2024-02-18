@@ -195,7 +195,7 @@ public class HomeFragment extends Fragment {
     //Método que pega os produtos similares aquele da página atual, na API
     private void definirSimilares(HomeFragment.Callback callback) {
         RequestQueue requisicao = Volley.newRequestQueue(getContext());
-        String url = "https://weartech.netlify.app/api/WebService/similaresID"; //Define a URL a ser consultada
+        String url = "http://weartech.somee.com/api/WebService/similaresID"; //Define a URL a ser consultada
 
         String tabela = p.tamanho == 0 ? "Oculos" : "Anel";
         ; //Descobre qual tabela deve ser chamada
